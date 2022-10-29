@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>Sablin Design Bureau</title>
+  <title>О.К.Б Саблин</title>
   
-  <subtitle>Welcome, enjoy yourself (*´∀`)</subtitle>
+  <subtitle>Привет! Enjoy yourself (*´∀`)</subtitle>
   <link href="https://www.sablin.top/atom.xml" rel="self"/>
   
   <link href="https://www.sablin.top/"/>
@@ -10,7 +10,7 @@
   <id>https://www.sablin.top/</id>
   
   <author>
-    <name>Moe-Sablin</name>
+    <name>Yoake-Sablin</name>
     
   </author>
   
@@ -125,9 +125,9 @@ repo&lt;/a&gt; data/indx.csv&lt;/p&gt;</summary>
     <category term="Finance" scheme="https://www.sablin.top/categories/Finance/"/>
     
     
-    <category term="python" scheme="https://www.sablin.top/tags/python/"/>
-    
     <category term="finance" scheme="https://www.sablin.top/tags/finance/"/>
+    
+    <category term="python" scheme="https://www.sablin.top/tags/python/"/>
     
   </entry>
   
