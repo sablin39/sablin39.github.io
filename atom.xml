@@ -6,7 +6,7 @@
   <link href="https://www.sablin.top/atom.xml" rel="self"/>
   
   <link href="https://www.sablin.top/"/>
-  <updated>2023-04-01T11:33:36.690Z</updated>
+  <updated>2023-04-01T17:27:18.002Z</updated>
   <id>https://www.sablin.top/</id>
   
   <author>
@@ -21,18 +21,17 @@
     <link href="https://www.sablin.top/uncategorized/zynq-hitl.html"/>
     <id>https://www.sablin.top/uncategorized/zynq-hitl.html</id>
     <published>2023-04-01T18:55:06.000Z</published>
-    <updated>2023-04-01T11:33:36.690Z</updated>
+    <updated>2023-04-01T17:27:18.002Z</updated>
     
-    <content type="html"><![CDATA[<span id="more"></span><h2 id="workflow">Workflow</h2><ol type="1"><li>上位机配置MAVLINK，PX4，MAVROS环境</li><li>实现ZYNQ PS端与上位机基于UDP MAVLINK通讯</li><li>实现PL端处理输入数据后经由PS端与上位机通讯</li></ol>]]></content>
+    <content type="html"><![CDATA[<span id="more"></span><h2 id="Workflow"><a href="#Workflow" class="headerlink" title="Workflow"></a>Workflow</h2><ol><li>上位机配置MAVLINK，PX4，MAVROS环境</li><li>实现ZYNQ PS端与上位机基于UDP MAVLINK通讯</li><li>实现PL端处理输入数据后经由PS端与上位机通讯<ol><li>裸机实现通过AXI DMA的PS&#x2F;PL通讯</li><li>Linux下实现通过AXI DMA的PS&#x2F;PL通讯</li><li>PL端数据经PS到达上位机</li></ol></li></ol>]]></content>
     
     
       
       
     <summary type="html">&lt;span id=&quot;more&quot;&gt;&lt;/span&gt;
-&lt;h2 id=&quot;workflow&quot;&gt;Workflow&lt;/h2&gt;
-&lt;ol type=&quot;1&quot;&gt;
-&lt;li&gt;上位机配置MAVLINK，PX4，MAVROS环境&lt;/li&gt;
-&lt;li&gt;实现ZYNQ PS端与上位机基于UDP MAVLINK</summary>
+
+&lt;h2 id=&quot;Workflow&quot;&gt;&lt;a href=&quot;#Workflow&quot; class=&quot;headerlink&quot; title=&quot;Workflow&quot;&gt;&lt;/a&gt;Workflow&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;上位机配置MAVLINK，PX</summary>
       
     
     
