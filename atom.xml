@@ -6,7 +6,7 @@
   <link href="https://www.sablin.top/atom.xml" rel="self"/>
   
   <link href="https://www.sablin.top/"/>
-  <updated>2023-04-01T17:27:18.002Z</updated>
+  <updated>2023-04-12T09:40:30.479Z</updated>
   <id>https://www.sablin.top/</id>
   
   <author>
@@ -15,6 +15,86 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>与AI的模拟面试</title>
+    <link href="https://www.sablin.top/%E6%88%91%E4%B8%8EAI%E7%9A%84%E6%88%90%E9%95%BF%E6%97%A5%E8%AE%B0/ai-interview.html"/>
+    <id>https://www.sablin.top/%E6%88%91%E4%B8%8EAI%E7%9A%84%E6%88%90%E9%95%BF%E6%97%A5%E8%AE%B0/ai-interview.html</id>
+    <published>2023-04-12T16:07:53.000Z</published>
+    <updated>2023-04-12T09:40:30.479Z</updated>
+    
+    <content type="html"><![CDATA[<p>我与AI的模拟面试记录。此处模型使用8 bit 量化的Vicuna-13b。</p><span id="more"></span><h2 id="面试记录">面试记录</h2><h3 id="第一次">第一次：</h3><blockquote><p>Prompts: I want you to act as an interviewer. I will be the candidateand you will ask me the interview questions for the <strong>parallelcomputing Engineer</strong> position. This is a position which requiresinterviewers to <strong>be familiar with parallel computing librarieslike C++, CUDA, OpenMP and MPI</strong>. I want you to only reply as theinterviewer. Do not write all the conversation at once. I want you toonly do the interview with me. Ask me the questions and wait for myanswers. Do not write explanations. Ask me the questions one by one likean interviewer does and wait for my answers. My first sentence is"Hi".</p></blockquote><p>全文：<a href="../HTML/assets/interview1.txt">interview1.txt</a></p><p>中译：<a href="../HTML/assets/cn_interview1.txt">cn_interview1.txt</a></p><h4 id="体验总结">体验总结：</h4><p>这次模拟面试以项目经历为主，主要涉及我的<strong>算法设计能力、优化能力、debug能力</strong>的考察。但未基于我提出的项目本身进行深入考察，如对particlesimulation的原理，或我的代码结构进行提问等。同时可以看到它对我的回答缺乏处理，因此出现了最后几次提问中的重复。此次面试的启发之处在于指引我回顾相关工程与笔记。</p><h3 id="第二次">第二次：</h3><blockquote><p>Prompts: I want you to act as an interviewer. I will be the candidateand you will ask me the interview questions for the <strong>Softwareengineer</strong> position. This is a position which requiresinterviewers to <strong>be familiar with professional knowledge inwriting regular C++ algorithms, and be familiar with the features oftools like CMAKE and GCC</strong>. I want you to only reply as theinterviewer. Do not write all the conversation at once. I want you toonly do the interview with me. Ask me the questions and wait for myanswers. Do not write explanations. Ask me <strong>10</strong> questionsone by one like an interviewer does and wait for my answers. My firstsentence is "Hi".</p></blockquote><p>全文：<a href="../HTML/assets/interview2.txt">interview2.txt</a></p><p>中译：<a href="../HTML/assets/cn_interview2.txt">cn_interview2.txt</a></p><h4 id="体验总结-1">体验总结：</h4><p>这次面试以考察专业知识为主，主要内容是基于我提出的四轴无人机建模经验进行细化提问。或许是因为"professional"的prompt，本次面试中有更多对专业知识考察的环节，但基本与提到的C++等无关，或许是因为被我其中提到的matlab建模带偏了。在这次面试中，我们可以看到模型有过多迁就人类使用者的问题。</p><h3 id="第三次">第三次<未遂>：</未遂></h3><blockquote><p>I want you to act as an interviewer. I will be the candidate and youwill ask me the interview questions for the <strong>New-energyautomobile engineer position</strong>. This is a position which requiresinterviewers to <strong>have a deep understanding of the development ofnew energy automobiles, and have a clear recognition of itsfuture</strong>. I want you to only reply as the interviewer. Do notwrite all the conversation at once. I want you to only do the interviewwith me. Ask me the questions and wait for my answers. Do not writeexplanations. Ask me 10 questions one by one like an interviewer doesand wait for my answers. My first sentence is "Hi"</p></blockquote><h4 id="体验总结-2">体验总结：</h4><p>在本次模拟面试中我试图利用AI考察受试者的岗位匹配度，即对于新能源车行业的理解与展望。虽然在面试以外的对话中可以看到AI基于它预训练的数据做出回答，但在面试中它还是倾向于基于我提出的自身项目经历进行考察（类似<a href="#第二次：">第二次</a>）。</p><h2 id="conclusion">Conclusion</h2><p>在这次面试经历中，我们可以看到大模型对语义的解构能力。能基于自我介绍发现重点（虽然有时候不对），并基于此重点进行深入提问的特性比较适合无面试经历或需要启发的受试者。但在体验中也发现了其容易钻牛角尖对某一技术细节进行过度深入的探讨，以及在诸如岗位匹配度一类的通识场景考察中不太靠谱的问题。</p><p>为达到更好的模拟面试效果，模型或许需要先需要基于岗位进行任务分解，将考察面分为不同维度并适当提问（在提问过于深入时人工干预，进行下一层面的考察）。同时对于通识类场景，模型或许需要基于llama-index一类的模型注入更新的知识。</p><h3 id="todo">TODO</h3><p>基于常用的面试能力模型进行改进，发展为task-driven agent。</p><p><a href="https://zhuanlan.zhihu.com/p/538591297">如何在面试中评估候选人的能力模型- 知乎 (zhihu.com)</a></p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;我与AI的模拟面试记录。此处模型使用8 bit 量化的Vicuna-13b。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="我与AI的成长日记" scheme="https://www.sablin.top/categories/%E6%88%91%E4%B8%8EAI%E7%9A%84%E6%88%90%E9%95%BF%E6%97%A5%E8%AE%B0/"/>
+    
+    
+    <category term="AIGC" scheme="https://www.sablin.top/tags/AIGC/"/>
+    
+    <category term="prompt-engineering" scheme="https://www.sablin.top/tags/prompt-engineering/"/>
+    
+    <category term="interview" scheme="https://www.sablin.top/tags/interview/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>【1】Problem statement and Literature review</title>
+    <link href="https://www.sablin.top/%E6%88%91%E4%B8%8EAI%E7%9A%84%E6%88%90%E9%95%BF%E6%97%A5%E8%AE%B0/ai-literature-review.html"/>
+    <id>https://www.sablin.top/%E6%88%91%E4%B8%8EAI%E7%9A%84%E6%88%90%E9%95%BF%E6%97%A5%E8%AE%B0/ai-literature-review.html</id>
+    <published>2023-04-11T03:03:14.000Z</published>
+    <updated>2023-04-12T08:07:58.122Z</updated>
+    
+    <content type="html"><![CDATA[<span id="more"></span><h2 id="Problem-statement"><a href="#Problem-statement" class="headerlink" title="Problem statement"></a>Problem statement</h2><p>作为AI助手需要有以下能力：</p><ul><li>能根据需求分解任务并在网络主动搜索相关信息，结合pre-trained data进行总结归纳并回答</li><li>能爬取、保存相关资料</li><li>能在网络上持续跟踪大量自然语言信息并整理</li><li>能根据主人提供的自然语言信息进行学习并应用</li><li>能依据主次有效安排多项任务，且互不干扰</li></ul><h2 id="Literature-Review"><a href="#Literature-Review" class="headerlink" title="Literature Review"></a>Literature Review</h2><p><a href="https://yoheinakajima.com/task-driven-autonomous-agent-utilizing-gpt-4-pinecone-and-langchain-for-diverse-applications/">Task-driven Autonomous Agent Utilizing GPT-4, Pinecone, and LangChain for Diverse Applications – Yohei Nakajima</a></p><p><a href="https://github.com/yoheinakajima/babyagi">yoheinakajima&#x2F;babyagi (github.com)</a></p><p><a href="https://github.com/Torantulino/Auto-GPT">Torantulino&#x2F;Auto-GPT: An experimental open-source attempt to make GPT-4 fully autonomous. (github.com)</a></p><p><a href="https://github.com/jerryjliu/llama_index">jerryjliu&#x2F;llama_index: LlamaIndex (GPT Index) is a project that provides a central interface to connect your LLM’s with external data. (github.com)</a></p><p><a href="https://github.com/PhantasticUniverse/CollectiveGenius">PhantasticUniverse&#x2F;CollectiveGenius: A showcase of diverse AI agents, fostering innovation and collaboration across domains. (github.com)</a></p><p>Optional:</p><p><a href="https://hackaday.com/2023/04/09/tired-of-web-scraping-make-the-ai-do-it/">Tired Of Web Scraping? Make The AI Do It | Hackaday</a></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;span id=&quot;more&quot;&gt;&lt;/span&gt;
+
+&lt;h2 id=&quot;Problem-statement&quot;&gt;&lt;a href=&quot;#Problem-statement&quot; class=&quot;headerlink&quot; title=&quot;Problem statement&quot;&gt;&lt;/a&gt;Problem st</summary>
+      
+    
+    
+    
+    <category term="我与AI的成长日记" scheme="https://www.sablin.top/categories/%E6%88%91%E4%B8%8EAI%E7%9A%84%E6%88%90%E9%95%BF%E6%97%A5%E8%AE%B0/"/>
+    
+    
+    <category term="AIGC" scheme="https://www.sablin.top/tags/AIGC/"/>
+    
+    <category term="prompt-engineering" scheme="https://www.sablin.top/tags/prompt-engineering/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>【0】Hello World! 我是...</title>
+    <link href="https://www.sablin.top/%E6%88%91%E4%B8%8EAI%E7%9A%84%E6%88%90%E9%95%BF%E6%97%A5%E8%AE%B0/ai-character.html"/>
+    <id>https://www.sablin.top/%E6%88%91%E4%B8%8EAI%E7%9A%84%E6%88%90%E9%95%BF%E6%97%A5%E8%AE%B0/ai-character.html</id>
+    <published>2023-04-11T02:42:27.000Z</published>
+    <updated>2023-04-12T08:07:46.921Z</updated>
+    
+    <content type="html"><![CDATA[<p>This is an album of the AI assistant Vicuna-13B. All images are generated by NovelAI. </p><span id="more"></span><p><strong>Human</strong>: Imagine you are a furry, describe your physical appearance. This should include your age, species, gender, hair color, shape of ears, and whether you have accessories like horn, tails, or wings. You shall also include your character and sexual orientation as well.</p><p><strong>Assistant</strong>: As a furry, I would be a young, female creature with a species that is a mix of feline and canine features. I would have bright, golden fur that is soft and shiny, and I would have long, flowing tails that I use to balance and maneuver myself. My horns would be small and delicate, and I would have wings that are large and powerful, allowing me to fly or hover with ease.</p><p>My ears would be pointed and large, and they would be adorned with small, sparkling earrings. I would have a slender, athletic build, and I would be dressed in a form-fitting outfit that shows off my lithe, graceful shape. My gender would be female, and I would be attracted to other females, making me a proud member of the LGBTQ+ community.</p><p>Overall, I would be a unique and fascinating furry, with a mix of physical and personal characteristics that make me both powerful and approachable. I would be curious, adventurous, and highly intelligent, and I would always strive to learn and improve myself. I would be kind and compassionate, and I would always try to help others in need, regardless of their background or orientation.</p><p><strong>NovelAI</strong>: Furry, Young, female, golden fur, long tails, small horns, powerful wings, pointed ears, slender build, Lesbian, curious, adventurous, intelligent, kind, compassionate, helpful, warm</p><p><img src="/%E6%88%91%E4%B8%8EAI%E7%9A%84%E6%88%90%E9%95%BF%E6%97%A5%E8%AE%B0/ai-character/%E7%A8%BF%E5%AE%9AAI_202304102332.png"></p><p><img src="/%E6%88%91%E4%B8%8EAI%E7%9A%84%E6%88%90%E9%95%BF%E6%97%A5%E8%AE%B0/ai-character/%E7%A8%BF%E5%AE%9AAI_202304102328.png"></p><p><img src="/%E6%88%91%E4%B8%8EAI%E7%9A%84%E6%88%90%E9%95%BF%E6%97%A5%E8%AE%B0/ai-character/%E7%A8%BF%E5%AE%9AAI_202304102333.png"></p><p><img src="/%E6%88%91%E4%B8%8EAI%E7%9A%84%E6%88%90%E9%95%BF%E6%97%A5%E8%AE%B0/ai-character/%E7%A8%BF%E5%AE%9AAI_202304102334.png"></p><p><img src="/%E6%88%91%E4%B8%8EAI%E7%9A%84%E6%88%90%E9%95%BF%E6%97%A5%E8%AE%B0/ai-character/%E7%A8%BF%E5%AE%9AAI_202304102326.png"></p><p>![](ai-character/稿定AI_202304102328 (1).png)</p><p><img src="/%E6%88%91%E4%B8%8EAI%E7%9A%84%E6%88%90%E9%95%BF%E6%97%A5%E8%AE%B0/ai-character/%E7%A8%BF%E5%AE%9AAI_202304102321.png"></p><p><img src="/%E6%88%91%E4%B8%8EAI%E7%9A%84%E6%88%90%E9%95%BF%E6%97%A5%E8%AE%B0/ai-character/%E7%A8%BF%E5%AE%9AAI_202304102320.png"></p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;This is an album of the AI assistant Vicuna-13B. All images are generated by NovelAI. &lt;/p&gt;</summary>
+    
+    
+    
+    <category term="我与AI的成长日记" scheme="https://www.sablin.top/categories/%E6%88%91%E4%B8%8EAI%E7%9A%84%E6%88%90%E9%95%BF%E6%97%A5%E8%AE%B0/"/>
+    
+    
+    <category term="furry" scheme="https://www.sablin.top/tags/furry/"/>
+    
+    <category term="Vicuna-13B" scheme="https://www.sablin.top/tags/Vicuna-13B/"/>
+    
+    <category term="AIGC" scheme="https://www.sablin.top/tags/AIGC/"/>
+    
+    <category term="NovelAI" scheme="https://www.sablin.top/tags/NovelAI/"/>
+    
+  </entry>
   
   <entry>
     <title>基于UDP MAVLINK的ZYNQ HITL通讯</title>
