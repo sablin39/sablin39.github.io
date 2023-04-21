@@ -331,7 +331,25 @@
 
 
 
+
+
 <!-- Extra support for third-party plguins  -->
+
+    <script>
+    // Initialize
+    const init = () => {
+        mermaid.initialize({theme: 'forest'});
+    };
+    const reload = () => {
+        mermaid.init(undefined, ".mermaid");
+    };
+    if (typeof mermaid == 'undefined') {
+        const src = 'https://unpkg.com/mermaid@7.1.2/dist/mermaid.min.js';
+        $.getScript(src, init);
+    }
+    // Set PJAX callback function
+    window.addEventListener('pjax:complete', reload);
+</script>
 
 
     </body>

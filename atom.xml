@@ -6,7 +6,7 @@
   <link href="https://www.sablin.top/atom.xml" rel="self"/>
   
   <link href="https://www.sablin.top/"/>
-  <updated>2023-04-17T15:09:41.381Z</updated>
+  <updated>2023-04-18T09:34:26.732Z</updated>
   <id>https://www.sablin.top/</id>
   
   <author>
@@ -15,6 +15,55 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>AI助手整体结构简介</title>
+    <link href="https://www.sablin.top/%E6%88%91%E4%B8%8EAI%E7%9A%84%E6%88%90%E9%95%BF%E6%97%A5%E8%AE%B0/llm-struc.html"/>
+    <id>https://www.sablin.top/%E6%88%91%E4%B8%8EAI%E7%9A%84%E6%88%90%E9%95%BF%E6%97%A5%E8%AE%B0/llm-struc.html</id>
+    <published>2023-04-18T13:53:06.000Z</published>
+    <updated>2023-04-18T09:34:26.732Z</updated>
+    
+    <content type="html"><![CDATA[<span id="more"></span><h2 id="Structure-Overview"><a href="#Structure-Overview" class="headerlink" title="Structure Overview"></a>Structure Overview</h2><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;span id=&quot;more&quot;&gt;&lt;/span&gt;
+
+&lt;h2 id=&quot;Structure-Overview&quot;&gt;&lt;a href=&quot;#Structure-Overview&quot; class=&quot;headerlink&quot; title=&quot;Structure Overview&quot;&gt;&lt;/a&gt;Structu</summary>
+      
+    
+    
+    
+    <category term="我与AI的成长日记" scheme="https://www.sablin.top/categories/%E6%88%91%E4%B8%8EAI%E7%9A%84%E6%88%90%E9%95%BF%E6%97%A5%E8%AE%B0/"/>
+    
+    
+    <category term="AIGC" scheme="https://www.sablin.top/tags/AIGC/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>RMUA自顶向下分析</title>
+    <link href="https://www.sablin.top/RMUA/RMUA-startup.html"/>
+    <id>https://www.sablin.top/RMUA/RMUA-startup.html</id>
+    <published>2023-04-18T11:36:40.000Z</published>
+    <updated>2023-04-18T09:53:25.629Z</updated>
+    
+    <content type="html"><![CDATA[<p>主要记录RMUA训练相关技术栈与Problem statement，随作者精神状态更新</p><span id="more"></span><h2 id="problem-statement-from-top-to-down">Problem Statement-From Topto Down</h2><pre class="mermaid">flowchart TDl1(RMUA)t(Training)c(Control)t1(Reward Design)t2(Exploration)t3(Imitation)c1(RL-based planning)c2(Coordination)t11(Sparse reward)c11(Contiuous action space)l1--&gt;tl1--&gt;ct--&gt;t1t--&gt;t2t--&gt;t3c--&gt;c1c--&gt;c2t1--&gt;t11c1--&gt;c11</pre>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;主要记录RMUA训练相关技术栈与Problem statement，随作者精神状态更新&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="RMUA" scheme="https://www.sablin.top/categories/RMUA/"/>
+    
+    
+    <category term="Reinforcement-Learning" scheme="https://www.sablin.top/tags/Reinforcement-Learning/"/>
+    
+    <category term="Robomaster" scheme="https://www.sablin.top/tags/Robomaster/"/>
+    
+  </entry>
   
   <entry>
     <title>Reading:&quot;NeRF:Representing Scenes as Neural Radiance Fields for View Synthesis&quot;</title>
