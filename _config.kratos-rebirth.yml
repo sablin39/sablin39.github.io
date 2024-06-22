@@ -15,8 +15,8 @@ image:
     light: "https://dev.krt.moe/demo-assets/banner.webp"
     dark: "https://dev.krt.moe/demo-assets/banner_dark.webp"
   background:
-    light: "https://www.unpkg.com/hexo-theme-kratos-rebirth@2.2.0/source/images/bg.webp"
-    dark: "https://www.unpkg.com/hexo-theme-kratos-rebirth@2.2.0/source/images/bg.webp"
+    light: "https://dev.krt.moe/demo-assets/bg.webp"
+    dark: "https://dev.krt.moe/demo-assets/bg.webp"
 
 # 顶部导航栏配置
 nav:
