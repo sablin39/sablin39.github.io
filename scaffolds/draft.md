@@ -6,4 +6,6 @@ tags:
 #cover:
 comments: true
 toc: true
+donate: true
+share: true
 ---
