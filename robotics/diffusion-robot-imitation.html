@@ -4,7 +4,7 @@
   <!-- 元数据 -->
   <meta charset="utf-8">
   <link rel="icon" href="">
-  <title>How Would Diffusion Model Help Your Robot Imitation | О.К.Б Саблин</title>
+  <title>How Would Diffusion Model Help Robot Imitation | О.К.Б Саблин</title>
   <meta name="author" content="Yoake-Hayashi" />
   <meta http-equiv="Cache-Control" content="no-transform" />
   <meta http-equiv="Cache-Control" content="no-siteapp" />
@@ -13,21 +13,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <meta name="format-detection" content="telphone=no, email=no" />
   
-    <meta name="keywords" content="diffusion, robotics" />
+    <meta name="keywords" content="EBM, diffusion, robotics" />
   
   <meta name="description" content="In short, using diffusion process instead of directly applying MSE loss on trajectories enables a wider variety of trajectory solutions learnt from imitation data, instead of the trajectory provided b">
 <meta property="og:type" content="article">
-<meta property="og:title" content="How Would Diffusion Model Help Your Robot Imitation">
+<meta property="og:title" content="How Would Diffusion Model Help Robot Imitation">
 <meta property="og:url" content="https://www.sablin.top/robotics/diffusion-robot-imitation.html">
 <meta property="og:site_name" content="О.К.Б Саблин">
 <meta property="og:description" content="In short, using diffusion process instead of directly applying MSE loss on trajectories enables a wider variety of trajectory solutions learnt from imitation data, instead of the trajectory provided b">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://www.sablin.top/robotics/diffusion-robot-imitation.htmlimage-20240901160714707.png">
 <meta property="article:published_time" content="2024-09-01T15:56:13.000Z">
-<meta property="article:modified_time" content="2024-10-05T08:51:21.601Z">
+<meta property="article:modified_time" content="2024-10-05T13:09:23.996Z">
 <meta property="article:author" content="Yoake-Hayashi">
 <meta property="article:tag" content="robotics">
 <meta property="article:tag" content="diffusion">
+<meta property="article:tag" content="EBM">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://www.sablin.top/robotics/diffusion-robot-imitation.htmlimage-20240901160714707.png">
 <meta name="twitter:site" content="@Burevestnik0829">
@@ -290,7 +291,7 @@ mjx-container[display="true"] + br {
     <div class="kratos-hentry kratos-post-inner clearfix">
         <header class="kratos-entry-header">
             
-                <h1 class="kratos-entry-title text-center">How Would Diffusion Model Help Your Robot Imitation</h1>
+                <h1 class="kratos-entry-title text-center">How Would Diffusion Model Help Robot Imitation</h1>
             
             
             <ul class="kratos-post-meta text-center">
@@ -300,12 +301,12 @@ mjx-container[display="true"] + br {
                     <i class="fa fa-edit"></i> 
                     
                     
-                        ~2.74K
+                        ~3.03K
                     
                     Words
                 </li>
                 
-                    <li id="/robotics/diffusion-robot-imitation.html" class="leancloud_visitors" data-flag-title="How Would Diffusion Model Help Your Robot Imitation">
+                    <li id="/robotics/diffusion-robot-imitation.html" class="leancloud_visitors" data-flag-title="How Would Diffusion Model Help Robot Imitation">
                         <i class="fa fa-eye"></i>
                         <span class="leancloud-visitors-count"> </span> Reads
                     </li>
@@ -321,13 +322,13 @@ mjx-container[display="true"] + br {
         <div class="kratos-post-content">
             <div id="expire-alert" class="alert alert-warning hidden" role="alert">
                 <div class="icon"><i class="fa fa-warning"></i></div>
-                <div class="text"><p>Last edited before <time datetime="1728118281601"></time>.</p></div>
+                <div class="text"><p>Last edited before <time datetime="1728133763996"></time>.</p></div>
             </div>
             
                 <div class="kratos-post-inner-toc">
-                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#diffusion-process-revisiting"><span class="toc-number">1.</span> <span class="toc-text">Diffusion Process Revisiting</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#paradigm-learning-distribution-by-estimating-gradients"><span class="toc-number">1.1.</span> <span class="toc-text">Paradigm:
-Learning Distribution by Estimating Gradients</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#implicit-policy-learning"><span class="toc-number">1.1.1.</span> <span class="toc-text">Implicit Policy Learning</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#stable-policy-learning"><span class="toc-number">1.2.</span> <span class="toc-text">Stable Policy Learning</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#stochastic-sampling-and-initialization"><span class="toc-number">1.2.1.</span> <span class="toc-text">Stochastic Sampling and
-Initialization</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#trajectory-generation-with-diffusion-models"><span class="toc-number">2.</span> <span class="toc-text">Trajectory
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#diffusion-process-revisiting"><span class="toc-number">1.</span> <span class="toc-text">Diffusion Process Revisiting</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#paradigm-learning-distribution-by-estimating-gradients"><span class="toc-number">2.</span> <span class="toc-text">Paradigm:
+Learning Distribution by Estimating Gradients</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#implicit-policy-learning"><span class="toc-number">2.1.</span> <span class="toc-text">Implicit Policy Learning</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#stochastic-sampling-and-initialization"><span class="toc-number">2.2.</span> <span class="toc-text">Stochastic Sampling and
+Initialization</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#trajectory-generation-with-diffusion-models"><span class="toc-number">3.</span> <span class="toc-text">Trajectory
 Generation with Diffusion Models</span></a></li></ol>
                 </div>
             
@@ -337,8 +338,21 @@ loss on trajectories enables a wider variety of trajectory solutions
 learnt from imitation data, instead of the trajectory provided by
 dataset(s), which is beneficial for small-set imitation learning. In
 this blog post, we will discuss how and why diffusion process can
-achieve such target-aware and trajectory-agnostic result.</p>
+achieve such and trajectory-agnostic result.</p>
 <span id="more"></span>
+<blockquote>
+<p>This is one part of the series about energy-based learning and
+optimal control. A recommended reading order is:</p>
+<ol type="1">
+<li><a href="../EBM/lecun-ebm-2021.html">Notes on "The Energy-Based
+Learning Model" by Yann LeCun, 2021</a></li>
+<li>Learning Data Distribution Via Gradient Estimation</li>
+<li>From MPC to Energy-Based Policy</li>
+<li><a href="../robotics/diffusion-robot-imitation.html">How Would
+Diffusion Model Help Robot Imitation</a></li>
+<li>Causality hidden in EBM</li>
+</ol>
+</blockquote>
 <figure>
 <img src="/robotics/diffusion-robot-imitation/0Pr4IDfywLamqSQWI.png" alt="These trajectories learned by diffusion policy for Push-T task shows that diffusion loss makes learning multiple solutions from a single imitation data possible.">
 <figcaption aria-hidden="true">These trajectories learned by diffusion
@@ -365,8 +379,8 @@ sampling.</figcaption>
 </figure>
 <p>And if we want to add condition for the model, we can simply use
 these conditions with cross attention on noise predictors.</p>
-<h3 id="paradigm-learning-distribution-by-estimating-gradients">Paradigm:
-Learning Distribution by Estimating Gradients</h3>
+<h2 id="paradigm-learning-distribution-by-estimating-gradients">Paradigm:
+Learning Distribution by Estimating Gradients</h2>
 <p>It’s easy for researchers to come out the idea that the conditional
 observation-action distribution <span class="math inline"><mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.566ex;" xmlns="http://www.w3.org/2000/svg" width="9.042ex" height="2.262ex" role="img" focusable="false" viewbox="0 -750 3996.5 1000"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><path data-c="1D443" d="M287 628Q287 635 230 637Q206 637 199 638T192 648Q192 649 194 659Q200 679 203 681T397 683Q587 682 600 680Q664 669 707 631T751 530Q751 453 685 389Q616 321 507 303Q500 302 402 301H307L277 182Q247 66 247 59Q247 55 248 54T255 50T272 48T305 46H336Q342 37 342 35Q342 19 335 5Q330 0 319 0Q316 0 282 1T182 2Q120 2 87 2T51 1Q33 1 33 11Q33 13 36 25Q40 41 44 43T67 46Q94 46 127 49Q141 52 146 61Q149 65 218 339T287 628ZM645 554Q645 567 643 575T634 597T609 619T560 635Q553 636 480 637Q463 637 445 637T416 636T404 636Q391 635 386 627Q384 621 367 550T332 412T314 344Q314 342 395 342H407H430Q542 342 590 392Q617 419 631 471T645 554Z"/></g><g data-mml-node="mo" transform="translate(751,0)"><path data-c="28" d="M94 250Q94 319 104 381T127 488T164 576T202 643T244 695T277 729T302 750H315H319Q333 750 333 741Q333 738 316 720T275 667T226 581T184 443T167 250T184 58T225 -81T274 -167T316 -220T333 -241Q333 -250 318 -250H315H302L274 -226Q180 -141 137 -14T94 250Z"/></g><g data-mml-node="msub" transform="translate(1140,0)"><g data-mml-node="mi"><path data-c="1D434" d="M208 74Q208 50 254 46Q272 46 272 35Q272 34 270 22Q267 8 264 4T251 0Q249 0 239 0T205 1T141 2Q70 2 50 0H42Q35 7 35 11Q37 38 48 46H62Q132 49 164 96Q170 102 345 401T523 704Q530 716 547 716H555H572Q578 707 578 706L606 383Q634 60 636 57Q641 46 701 46Q726 46 726 36Q726 34 723 22Q720 7 718 4T704 0Q701 0 690 0T651 1T578 2Q484 2 455 0H443Q437 6 437 9T439 27Q443 40 445 43L449 46H469Q523 49 533 63L521 213H283L249 155Q208 86 208 74ZM516 260Q516 271 504 416T490 562L463 519Q447 492 400 412L310 260L413 259Q516 259 516 260Z"/></g><g data-mml-node="mi" transform="translate(783,-150) scale(0.707)"><path data-c="1D461" d="M26 385Q19 392 19 395Q19 399 22 411T27 425Q29 430 36 430T87 431H140L159 511Q162 522 166 540T173 566T179 586T187 603T197 615T211 624T229 626Q247 625 254 615T261 596Q261 589 252 549T232 470L222 433Q222 431 272 431H323Q330 424 330 420Q330 398 317 385H210L174 240Q135 80 135 68Q135 26 162 26Q197 26 230 60T283 144Q285 150 288 151T303 153H307Q322 153 322 145Q322 142 319 133Q314 117 301 95T267 48T216 6T155 -11Q125 -11 98 4T59 56Q57 64 57 83V101L92 241Q127 382 128 383Q128 385 77 385H26Z"/></g></g><g data-mml-node="mo" transform="translate(2228.3,0) translate(0 -0.5)"><path data-c="7C" d="M139 -249H137Q125 -249 119 -235V251L120 737Q130 750 139 750Q152 750 159 735V-235Q151 -249 141 -249H139Z"/></g><g data-mml-node="msub" transform="translate(2506.3,0)"><g data-mml-node="mi"><path data-c="1D442" d="M740 435Q740 320 676 213T511 42T304 -22Q207 -22 138 35T51 201Q50 209 50 244Q50 346 98 438T227 601Q351 704 476 704Q514 704 524 703Q621 689 680 617T740 435ZM637 476Q637 565 591 615T476 665Q396 665 322 605Q242 542 200 428T157 216Q157 126 200 73T314 19Q404 19 485 98T608 313Q637 408 637 476Z"/></g><g data-mml-node="mi" transform="translate(796,-150) scale(0.707)"><path data-c="1D461" d="M26 385Q19 392 19 395Q19 399 22 411T27 425Q29 430 36 430T87 431H140L159 511Q162 522 166 540T173 566T179 586T187 603T197 615T211 624T229 626Q247 625 254 615T261 596Q261 589 252 549T232 470L222 433Q222 431 272 431H323Q330 424 330 420Q330 398 317 385H210L174 240Q135 80 135 68Q135 26 162 26Q197 26 230 60T283 144Q285 150 288 151T303 153H307Q322 153 322 145Q322 142 319 133Q314 117 301 95T267 48T216 6T155 -11Q125 -11 98 4T59 56Q57 64 57 83V101L92 241Q127 382 128 383Q128 385 77 385H26Z"/></g></g><g data-mml-node="mo" transform="translate(3607.5,0)"><path data-c="29" d="M60 749L64 750Q69 750 74 750H86L114 726Q208 641 251 514T294 250Q294 182 284 119T261 12T224 -76T186 -143T145 -194T113 -227T90 -246Q87 -249 86 -250H74Q66 -250 63 -250T58 -247T55 -238Q56 -237 66 -225Q221 -64 221 250T66 725Q56 737 55 738Q55 746 60 749Z"/></g></g></g></svg></mjx-container></span> can also be learned by estimation gradients of data
 distribution, which is a common paradigm of RL and IL.</p>
@@ -374,16 +388,15 @@ distribution, which is a common paradigm of RL and IL.</p>
 <img src="/robotics/diffusion-robot-imitation/image-20240901122151333.png" alt="image-20240901122151333">
 <figcaption aria-hidden="true">image-20240901122151333</figcaption>
 </figure>
-<h4 id="implicit-policy-learning">Implicit Policy Learning</h4>
+<h3 id="implicit-policy-learning">Implicit Policy Learning</h3>
 <p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2011.13456"><em>Score-Based Generative
 Modeling through Stochastic Differential Equations</em></a> states that,
 for score matching, it's reversing a "variance exploding" SDE where more
 and more noise is added to data, while diffusion models are reversing a
 "variance preserving" SDE that interpolates between the data and a fixed
 variance gaussian.</p>
-<h3 id="stable-policy-learning">Stable Policy Learning</h3>
-<h4 id="stochastic-sampling-and-initialization">Stochastic Sampling and
-Initialization</h4>
+<h3 id="stochastic-sampling-and-initialization">Stochastic Sampling and
+Initialization</h3>
 <blockquote>
 <p>Intuitively, multi-modality in action generation for diffusion policy
 arises from two sources – an underlying stochastic sampling procedure
@@ -400,7 +413,6 @@ different training sets, especially visual training sets like Internet
 videos, trajectory, as a time-dependent elegant modal, is adopted by
 multiple works, its generation with diffusion is also a low-hanging
 fruit.</p>
-<p>track2act</p>
 <p>Flow as the Cross-domain Manipulation Interface
 https://arxiv.org/abs/2407.15208</p>
 
@@ -465,13 +477,13 @@ https://arxiv.org/abs/2407.15208</p>
             const facebookBase  = "https://www.facebook.com/sharer/sharer.php?";
             const twitterBase   = "https://twitter.com/intent/tweet?";
             const hostUrl       = "https://www.sablin.top/robotics/diffusion-robot-imitation.html";
-            const title         = "「How Would Diffusion Model Help Your Robot Imitation」";
+            const title         = "「How Would Diffusion Model Help Robot Imitation」";
             const excerpt       = `In short, using diffusion process instead of directly applying MSE
 loss on trajectories enables a wider variety of trajectory solutions
 learnt from imitation data, instead of the trajectory provided by
 dataset(s), which is beneficial for small-set imitation learning. In
 this blog post, we will discuss how and why diffusion process can
-achieve such target-aware and trajectory-agnostic result.`;
+achieve such and trajectory-agnostic result.`;
             let _URL;
             switch (dest) {
                 case "qq"       : _URL = qqBase+"url="+hostUrl+"&title="+title+"&desc=&summary="+excerpt+"&site=cxpy";     break;
@@ -490,7 +502,7 @@ achieve such target-aware and trajectory-agnostic result.`;
             <div class="footer-tag clearfix">
                 <div class="pull-left">
                 <i class="fa fa-tags"></i>
-                    <a class="tag-none-link" href="/tags/diffusion/" rel="tag">diffusion</a>, <a class="tag-none-link" href="/tags/robotics/" rel="tag">robotics</a>
+                    <a class="tag-none-link" href="/tags/EBM/" rel="tag">EBM</a>, <a class="tag-none-link" href="/tags/diffusion/" rel="tag">diffusion</a>, <a class="tag-none-link" href="/tags/robotics/" rel="tag">robotics</a>
                 </div>
                 <div class="pull-date">
                 <span>Last edited in2024-10-05</span>
@@ -507,7 +519,7 @@ achieve such target-aware and trajectory-agnostic result.`;
             
             
             <div class="nav-next clearfix">
-                <a title=" Basic Algorithmic Formulations in Game Theory" href="/game-theory/game-theory-basic-formulations.html">Prev &gt;</a>
+                <a title=" Notes on &#39;The Energy-Based Learning Model&#39; by Yann LeCun, 2021" href="/EBM/lecun-ebm-2021.html">Prev &gt;</a>
             </div>
             
         </nav>
@@ -573,7 +585,7 @@ achieve such target-aware and trajectory-agnostic result.`;
                 Categories
             </span>
             <span class="count">
-                9
+                8
             </span>
         </a>
         <a class="meta-item" href="/tags/">
@@ -597,9 +609,9 @@ achieve such target-aware and trajectory-agnostic result.`;
         <span class="toc-progress-bar"></span>
     </h4>
     <div class="textwidget">
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#diffusion-process-revisiting"><span class="toc-text">Diffusion Process Revisiting</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#paradigm-learning-distribution-by-estimating-gradients"><span class="toc-text">Paradigm:
-Learning Distribution by Estimating Gradients</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#implicit-policy-learning"><span class="toc-text">Implicit Policy Learning</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#stable-policy-learning"><span class="toc-text">Stable Policy Learning</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#stochastic-sampling-and-initialization"><span class="toc-text">Stochastic Sampling and
-Initialization</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#trajectory-generation-with-diffusion-models"><span class="toc-text">Trajectory
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#diffusion-process-revisiting"><span class="toc-text">Diffusion Process Revisiting</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#paradigm-learning-distribution-by-estimating-gradients"><span class="toc-text">Paradigm:
+Learning Distribution by Estimating Gradients</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#implicit-policy-learning"><span class="toc-text">Implicit Policy Learning</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#stochastic-sampling-and-initialization"><span class="toc-text">Stochastic Sampling and
+Initialization</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#trajectory-generation-with-diffusion-models"><span class="toc-text">Trajectory
 Generation with Diffusion Models</span></a></li></ol>
     </div>
 </aside>
@@ -607,7 +619,7 @@ Generation with Diffusion Models</span></a></li></ol>
                 
   <aside id="krw-categories" class="widget widget-kratos-categories clearfix">
     <h4 class="widget-title"><i class="fa fa-folder"></i>Categories</h4>
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/EBM/">EBM</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Interactive-Perception/">Interactive-Perception</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/NeRF/">NeRF</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Project-Management/">Project-Management</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/diffusion/">diffusion</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/game-theory/">game theory</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/graph/">graph</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/information-geometry/">information-geometry</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/robotics/">robotics</a><span class="category-list-count">1</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/EBM/">EBM</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Interactive-Perception/">Interactive-Perception</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/LLM/">LLM</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/NeRF/">NeRF</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Project-Management/">Project-Management</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/diffusion/">diffusion</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/game-theory/">game-theory</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/robotics/">robotics</a><span class="category-list-count">1</span></li></ul>
   </aside>
 
 
@@ -616,7 +628,7 @@ Generation with Diffusion Models</span></a></li></ol>
   <aside id="krw-tags" class="widget widget-kratos-tags clearfix">
     <h4 class="widget-title"><i class="fa fa-tags"></i>Tag cloud</h4>
       <div class="tag-clouds">
-        <a href="/tags/Articulation-Reconstruction/" style="font-size: 0.73em;">Articulation Reconstruction</a> <a href="/tags/Computer-vision/" style="font-size: 0.6em;">Computer vision</a> <a href="/tags/Computer-Vision/" style="font-size: 0.67em;">Computer-Vision</a> <a href="/tags/Deep-Learning/" style="font-size: 0.6em;">Deep-Learning</a> <a href="/tags/EBM/" style="font-size: 0.6em;">EBM</a> <a href="/tags/Graph/" style="font-size: 0.6em;">Graph</a> <a href="/tags/Interactive-Perception/" style="font-size: 0.67em;">Interactive-Perception</a> <a href="/tags/NeRF/" style="font-size: 0.8em;">NeRF</a> <a href="/tags/UAV/" style="font-size: 0.6em;">UAV</a> <a href="/tags/diffusion/" style="font-size: 0.67em;">diffusion</a> <a href="/tags/game-theory/" style="font-size: 0.6em;">game theory</a> <a href="/tags/information-geometry/" style="font-size: 0.6em;">information-geometry</a> <a href="/tags/localization/" style="font-size: 0.6em;">localization</a> <a href="/tags/optimization/" style="font-size: 0.6em;">optimization</a> <a href="/tags/papers/" style="font-size: 0.6em;">papers</a> <a href="/tags/robotics/" style="font-size: 0.73em;">robotics</a> <a href="/tags/self-supervised-learning/" style="font-size: 0.6em;">self-supervised-learning</a> <a href="/tags/time-series/" style="font-size: 0.6em;">time series</a>
+        <a href="/tags/Articulation-Reconstruction/" style="font-size: 0.7em;">Articulation Reconstruction</a> <a href="/tags/Computer-Vision/" style="font-size: 0.6em;">Computer-Vision</a> <a href="/tags/Deep-Learning/" style="font-size: 0.6em;">Deep-Learning</a> <a href="/tags/EBM/" style="font-size: 0.7em;">EBM</a> <a href="/tags/Finance/" style="font-size: 0.6em;">Finance</a> <a href="/tags/Game-Theory/" style="font-size: 0.6em;">Game-Theory</a> <a href="/tags/Interactive-Perception/" style="font-size: 0.65em;">Interactive-Perception</a> <a href="/tags/LLM/" style="font-size: 0.6em;">LLM</a> <a href="/tags/MCTS/" style="font-size: 0.6em;">MCTS</a> <a href="/tags/NeRF/" style="font-size: 0.8em;">NeRF</a> <a href="/tags/UAV/" style="font-size: 0.6em;">UAV</a> <a href="/tags/diffusion/" style="font-size: 0.7em;">diffusion</a> <a href="/tags/localization/" style="font-size: 0.6em;">localization</a> <a href="/tags/optimization/" style="font-size: 0.6em;">optimization</a> <a href="/tags/papers/" style="font-size: 0.6em;">papers</a> <a href="/tags/robotics/" style="font-size: 0.75em;">robotics</a> <a href="/tags/self-supervised-learning/" style="font-size: 0.6em;">self-supervised-learning</a> <a href="/tags/time-series/" style="font-size: 0.6em;">time series</a>
       </div>
   </aside>
 
@@ -630,7 +642,19 @@ Generation with Diffusion Models</span></a></li></ol>
         
           
           
-            <a class="list-group-item" href="/information-geometry/uncertainty-info-geometry.html"><i class="fa  fa-book"></i> Uncertainty Quantification with Information Geometry</a>
+            <a class="list-group-item" href="/LLM/macro-o1.html"><i class="fa  fa-book"></i> Brief Dive into Macro-o1 and o1-like LLMs</a>
+            
+          
+        
+          
+          
+            <a class="list-group-item" href="/game-theory/kyle-market-model.html"><i class="fa  fa-book"></i> Kyle's Market Micro-architecture Model</a>
+            
+          
+        
+          
+          
+            <a class="list-group-item" href="/EBM/mpc-diffusion-policy.html"><i class="fa  fa-book"></i> From MPC to Diffusion Policy</a>
             
           
         
@@ -642,19 +666,7 @@ Generation with Diffusion Models</span></a></li></ol>
         
           
           
-            <a class="list-group-item" href="/game-theory/game-theory-basic-formulations.html"><i class="fa  fa-book"></i> Basic Algorithmic Formulations in Game Theory</a>
-            
-          
-        
-          
-          
-            <a class="list-group-item" href="/robotics/diffusion-robot-imitation.html"><i class="fa  fa-book"></i> How Would Diffusion Model Help Your Robot Imitation</a>
-            
-          
-        
-          
-          
-            <a class="list-group-item" href="/diffusion/scoregrad.html"><i class="fa  fa-book"></i> Notes on ScoreGrad</a>
+            <a class="list-group-item" href="/robotics/diffusion-robot-imitation.html"><i class="fa  fa-book"></i> How Would Diffusion Model Help Robot Imitation</a>
             
           
         
