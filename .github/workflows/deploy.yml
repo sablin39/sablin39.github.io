@@ -32,10 +32,10 @@ jobs:
             ${{ runner.os }}-
       - name: Init Node.js # 安装源代码所需插件
         run: |
-          npm install
+          npm install -g
           cp ./_config.kratos-rebirth.yml ./themes/Kratos-Rebirth/_config.yml
           cd themes/Kratos-Rebirth
-          npm install
+          npm install -g
           echo "init node successful"
       - name: Install Hexo-cli # 安装 Hexo
         run: |

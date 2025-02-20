@@ -47,7 +47,7 @@ vendors:
 # 自定义样式
 customStyles:
   images: # 图片相关设置
-    banner: https://github.com/sablin39/sablin39.github.io/theme_assets/1131709.jpg # 站点横幅
+    banner: https://github.com/sablin39/sablin39.github.io/blob/main/theme_assets/1131709.jpg?raw=true # 站点横幅
     # background: /images/bg.webp # 站点背景
 
 # Index 首页配置
