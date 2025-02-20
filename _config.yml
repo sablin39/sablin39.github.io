@@ -67,6 +67,9 @@ prismjs:
 mathjax:
   enable: true
   per_page: true
+markdown:
+  plugins:
+    - markdown-it-footnote
 
 # mermaid chart
 mermaid: ## mermaid url https://github.com/knsv/mermaid
