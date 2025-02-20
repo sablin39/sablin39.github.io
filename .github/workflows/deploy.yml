@@ -33,7 +33,7 @@ jobs:
       - name: Init Node.js # 安装源代码所需插件
         run: |
           npm install
-          cp ./_config.kratos-rebirth.yml .themes/Kratos-Rebirth/_config.yml
+          cp ./_config.kratos-rebirth.yml ./themes/Kratos-Rebirth/_config.yml
           cd themes/Kratos-Rebirth
           npm install
           echo "init node successful"
