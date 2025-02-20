@@ -1,4 +1,13 @@
 ---
 title: {{ title }}
-tags:
+date: {{ date }}
+pic: 
+tags: 
+categories: 
+mathjax: 
+toc: 
 ---
+
+
+
+<!-- more -->
