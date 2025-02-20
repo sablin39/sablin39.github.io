@@ -1,4 +1,4 @@
-name: DoubleAm's Blog CI/CD # 脚本 workflow 名称
+name: Hexo Blog CI/CD # 脚本 workflow 名称
 
 on:
   push:
@@ -14,7 +14,11 @@ jobs:
     runs-on: ubuntu-latest # 指定最新 ubuntu 系统
     steps:
       - uses: actions/checkout@v2 # 拉取仓库代码
+        with:
+          submodules: recursive
       - uses: actions/setup-node@v2 # 设置 node.js 环境
+        with:
+          node-version: '18.17.1'
       - name: Cache node_modules # 缓存 node_modules，提高编译速度，毕竟每月只有 2000 分钟。
         uses: actions/cache@v2 # 亲测 Github 服务器编译速度比我自己电脑都快，如果每次构建按5分钟计算，我们每个月可以免费部署 400 次，Github yyds！！！
         env:
@@ -29,6 +33,9 @@ jobs:
       - name: Init Node.js # 安装源代码所需插件
         run: |
           npm install
+          cp ./_config.kratos-rebirth.yml .themes/Kratos-Rebirth/_config.yml
+          cd themes/Kratos-Rebirth
+          npm install
           echo "init node successful"
       - name: Install Hexo-cli # 安装 Hexo
         run: |
@@ -41,8 +48,8 @@ jobs:
           echo "build blog successful"
       - name: Deploy DoubleAm's Blog # 设置 git 信息并推送静态博客文件
         run: |
-          git config --global user.name "doubleam"
-          git config --global user.email "admin@biugle.cn"
+          git config --global user.name "sablin39"
+          git config --global user.email "1020030829@qq.com"
           hexo deploy
 
       - run: echo "Deploy Successful!"
