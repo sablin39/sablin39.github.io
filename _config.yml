@@ -16,8 +16,9 @@ timezone: ''
 
 # URL
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
-url: https://krt.moe
-permalink: posts/:title/
+url: https://blog.okbsablin.su
+root:
+permalink: :category/:title.html
 permalink_defaults:
 pretty_urls:
   trailing_index: true # Set to false to remove trailing 'index.html' from permalinks
@@ -107,6 +108,15 @@ theme: kratos-rebirth
 plugin:
  - hexo-generator-feed
  - hexo-generator-sitemap
+ - hexo-footnote
+
+katex:
+  enable: true
+  per_page: false
+  strict: false
+  options:
+    throwOnError: false
+    errorColor: '#cc0000'
 
 feed:
  type: atom

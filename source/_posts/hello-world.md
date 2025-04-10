@@ -1,11 +1,9 @@
 ---
 title: 你好，世界！
-date: 2018-05-06 17:03:12
-categories: 全新体验
+date: 1970-01-01 00:00:01
+categories: 
 tags:
-- 欢迎
-sticky: 1
-#cover:
+cover:
 comments: true
 toc: true
 ---

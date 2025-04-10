@@ -3,10 +3,11 @@ title: {{ title }}
 date: {{ date }}
 categories:
 tags:
-#sticky:
-#cover:
-comments: true
+# sticky:
+# show_in: ("home" | "category" | "tag")[] ;
+cover:
+comments: false
 toc: true
-donate: true
+donate: false
 share: true
 ---
