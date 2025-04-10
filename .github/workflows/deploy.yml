@@ -1,0 +1,62 @@
+name: Hexo Blog CI/CD # 脚本 workflow 名称
+
+on:
+  push:
+    branches: [main, master] # 当监测 main,master 的 push
+    paths: # 监测所有 source 目录下的文件变动，所有 yml,json 后缀文件的变动，以及scripts目录。
+      - '*.json'
+      - '**.yml'
+      - '**/source/**'
+      - '**/scripts/**'
+
+jobs:
+  blog: # 任务名称
+    timeout-minutes: 30 # 设置 30 分钟超时
+    runs-on: ubuntu-latest # 指定最新 ubuntu 系统
+    steps:
+      - uses: actions/checkout@v4 # 拉取仓库代码
+        with:
+          submodules: recursive
+      - uses: actions/setup-node@v4 # 设置 node.js 环境
+        with:
+          node-version: '18.17.1'
+      - name: Cache node_modules # 缓存 node_modules，提高编译速度
+        uses: actions/cache@v3 # 使用最新的缓存 action
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - name: Init Node.js # 安装源代码所需插件
+        run: |
+          npm install 
+          cp ./_config.kratos-rebirth.yml ./themes/Kratos-Rebirth/_config.yml
+          cd themes/Kratos-Rebirth
+          npm install 
+          echo "init node successful"
+      - name: Install Hexo-cli # 安装 Hexo
+        run: |
+          npm install -g hexo-cli --save
+          echo "install hexo successful"
+      - name: Build Blog # 编译创建静态博客文件
+        run: |
+          hexo clean
+          hexo g
+          echo "build blog successful"
+      - name: Deploy Configs # 设置 git 信息并推送静态博客文件
+        env:
+          ACTIONS_DEPLOY_KEY: ${{secrets.ACTIONS_DEPLOY_KEY}}
+        run: |
+          sudo timedatectl set-timezone "Asia/Shanghai"
+          mkdir -p ~/.ssh/
+          echo "$ACTIONS_DEPLOY_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          git config --global user.name "sablin39"
+          git config --global user.email "1020030829@qq.com"
+          hexo deploy
+
+      - run: echo "Deploy Successful!"
