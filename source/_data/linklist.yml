@@ -1,0 +1,18 @@
+friends:
+  - title: "TingNote"
+    description: "喵~"
+    image: "../images/ting.png"
+    link: "https://www.cnblogs.com/tingnote/"
+  - title: "欢迎来看红光今天吃什么"
+    description: "喵~"
+    image: "https://redlightasl.top/assets/Patchouli.jpg"
+    link: "https://redlightasl.top/"
+  # - title: "Beiyan Da(北雁 达)"
+  #   description: "醉里不知天在水，满船清梦压星河。"
+  #   image: "https://da.beiyan.us/assets/littleyushi.jpg"
+  #   link: "https://da.beiyan.us/"
+  - title: "木头人的小木屋"
+    description: "人生南北多歧路，时代喧哗造物忙。"
+    image: "https://woodman3.github.io/img/avatar_huc17459e21dbc94a20608b5fd196ea845_3679_300x0_resize_q75_box.jpg"
+    link: "https://woodman3.github.io/"
+    
