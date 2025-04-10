@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+  <!-- 元数据 -->
+  <meta charset="utf-8">
+  
+  
+  <title>Swizzling: The Snake Trying Not to Bite Itself | О.К.Б Саблин</title>
+  <link rel="canonical" href="https://blog.okbsablin.su/GPU/swizzling.html">
+  <meta name="author" content="Yoake-Hayashi" />
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="robots" content="index,follow" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <meta name="format-detection" content="telphone=no, email=no" />
+  
+    <meta name="keywords" content="Architecture, SIMT" />
+  
+  <meta name="description" content="Abstract To avoid shared memory conflict in shared memory for each thread in different banks, swizzling is invented to create offsets for memory allocation. Which means, finding places for the memory">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Swizzling: The Snake Trying Not to Bite Itself">
+<meta property="og:url" content="https://blog.okbsablin.su/GPU/swizzling.html">
+<meta property="og:site_name" content="О.К.Б Саблин">
+<meta property="og:description" content="Abstract To avoid shared memory conflict in shared memory for each thread in different banks, swizzling is invented to create offsets for memory allocation. Which means, finding places for the memory">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://blog.okbsablin.su/GPU/swizzling.htmlimage-20240424224721367.png">
+<meta property="article:published_time" content="2024-04-25T00:52:57.000Z">
+<meta property="article:modified_time" content="2025-04-10T16:39:17.460Z">
+<meta property="article:author" content="Yoake-Hayashi">
+<meta property="article:tag" content="Architecture">
+<meta property="article:tag" content="SIMT">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.okbsablin.su/GPU/swizzling.htmlimage-20240424224721367.png">
+  
+    <link rel="alternate" href="/atom.xml" title="О.К.Б Саблин" type="application/atom+xml">
+  
+  <!-- 样式表文件 -->
+  <link rel="stylesheet" id="kratos-css" href="/css/kr-core.min.css" media="all"></link>
+  
+    <link rel="stylesheet" id="highlight-css" href="/css/highlight/highlight.js/night-eighties.min.css" media="all"></link>
+  
+  <link rel="stylesheet" id="theme-light-css" href="/css/kr-theme/light.min.css" media="all"></link>
+  <link rel="stylesheet" id="theme-dark-css" href="/css/kr-theme/dark.min.css" media="(prefers-color-scheme: dark)"></link>
+  <script src="/js/kr-theme.min.js"></script>
+  <link rel="stylesheet" id="fontawe-css" href="/vendors/font-awesome@4.7.0/css/font-awesome.min.css" media="all"></link>
+  
+    <link rel="stylesheet" id="nprogress-css" href="/vendors/nprogress@0.2.0/nprogress.css" media="all"></link>
+  
+  
+    <link rel="stylesheet" href="/vendors/viewerjs@1.11.6/dist/viewer.min.css"></link>
+  
+  <!-- 不得不预先加载的一些JS文件 -->
+  
+    <script src="/vendors/qr-code-styling@1.6.0-rc.1/lib/qr-code-styling.js"></script>
+  
+  <!-- 自定义站点横幅和背景 -->
+  <style>
+    
+      .kratos-cover.kratos-cover-2 {
+        background-image: url('https://github.com/sablin39/sablin39.github.io/blob/main/theme_assets/1131709.jpg?raw=true');
+      }
+      html[data-theme="dark"] .kratos-cover.kratos-cover-2 {
+        background-image: url('https://github.com/sablin39/sablin39.github.io/blob/main/theme_assets/1131709.jpg?raw=true');
+      }
+    
+    
+      @media(min-width:768px) {
+        body.custom-background {
+          background-image: url('https://github.com/sablin39/sablin39.github.io/blob/main/theme_assets/bg.webp?raw=true');
+        }
+        html[data-theme="dark"] body.custom-background {
+          background-image: url('https://github.com/sablin39/sablin39.github.io/blob/main/theme_assets/bg.webp?raw=true');
+        }
+      }
+    
+    
+      .widget-kratos-about .photo-background {
+        background-image: url('/images/default.webp');
+      }
+      html[data-theme="dark"] .widget-kratos-about .photo-background {
+        background-image: url('/images/default.webp');
+      }
+    
+  </style>
+
+  <!-- 额外的追加注入项 -->
+  
+<!-- hexo injector head_end start --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" integrity="sha512-fHwaWebuwA7NSF5Qg/af4UeDx9XqUpYpOGgubo3yWu+b2IQR4UeQwbb42Ti7gVAjNtVoI/I9TEoYeu9omwcC6g==" crossorigin="anonymous" referrerpolicy="no-referrer" /><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head>
+
+    <body class="custom-background">
+        <div id="kratos-wrapper">
+    <div id="kratos-page">
+        <div id="kratos-header">
+            <header id="kratos-desktop-topnav" class="kratos-topnav">
+                <div class="container">
+                    <div class="nav-header">
+                        <nav id="kratos-menu-wrap">
+                            <ul id="kratos-primary-menu" class="sf-menu">
+                                
+                                    <li>
+                                        
+                                            <a href="/">
+                                        
+                                            
+                                                <i class="fa fa-home"></i>
+                                            
+                                            Home
+                                        </a>
+                                        
+                                    </li>
+                                
+                                    <li>
+                                        
+                                            <a href="/categories/">
+                                        
+                                            
+                                                <i class="fa fa-file"></i>
+                                            
+                                            Categories
+                                        </a>
+                                        
+                                    </li>
+                                
+                                    <li>
+                                        
+                                            <a href="/friends/">
+                                        
+                                            
+                                                <i class="fa fa-paw"></i>
+                                            
+                                            Pals
+                                        </a>
+                                        
+                                    </li>
+                                
+                                    <li>
+                                        
+                                            <a>
+                                        
+                                            
+                                                <i class="fa fa-link"></i>
+                                            
+                                            Trans Guides
+                                        </a>
+                                        
+                                            <ul class="sub-menu">
+                                                
+                                                    <li>
+                                                        <a target="_blank" rel="noopener" href="https://mtf.wiki/">
+                                                            
+                                                            MtF Wiki
+                                                        </a>
+                                                    </li>
+                                                
+                                                    <li>
+                                                        <a target="_blank" rel="noopener" href="https://ftm.wiki/">
+                                                            
+                                                            FtM Wiki
+                                                        </a>
+                                                    </li>
+                                                
+                                                    <li>
+                                                        <a target="_blank" rel="noopener" href="https://docs.hrt.guide/">
+                                                            
+                                                            Shizu's HRT guide
+                                                        </a>
+                                                    </li>
+                                                
+                                                    <li>
+                                                        <a target="_blank" rel="noopener" href="https://tfsci.mtf.wiki/">
+                                                            
+                                                            女性倾向跨性别者科学
+                                                        </a>
+                                                    </li>
+                                                
+                                                    <li>
+                                                        <a target="_blank" rel="noopener" href="https://transfemscience.org/">
+                                                            
+                                                            Transfeminine Science
+                                                        </a>
+                                                    </li>
+                                                
+                                                    <li>
+                                                        <a target="_blank" rel="noopener" href="https://taylormccue.itch.io/do-i-pass">
+                                                            
+                                                            A little game :)
+                                                        </a>
+                                                    </li>
+                                                
+                                            </ul>
+                                        
+                                    </li>
+                                
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </header>
+            <header id="kratos-mobile-topnav" class="kratos-topnav">
+                <div class="container">
+                    <div class="color-logo"><a href="/">О.К.Б Саблин</a></div>
+                    <div id="kratos-nav-toggle-wrapper" class="nav-toggle">
+                        <a id="kratos-nav-toggle" class="kratos-nav-toggle">
+                            <i></i>
+                        </a>
+                    </div>
+                </div>
+            </header>
+        </div>
+        <div class="kratos-start kratos-hero-2">
+            <!-- <div class="kratos-overlay"></div> -->
+            <div class="kratos-cover kratos-cover-2 text-center">
+                <div class="desc desc2 animate-box">
+                    <a href="/">
+                        <h2>О.К.Б Саблин</h2> <br />
+                        <span>我れ狂か愚か知らず，一路遂に奔騰するのみ</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div id="kratos-blog-post">
+            <div class="container">
+                <div id="main" class="row">
+
+
+        
+
+            
+
+            <section class="kr-main-col col-md-8">
+
+        
+
+            <article itemscope itemtype="https://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.okbsablin.su/GPU/swizzling.html">
+    <div class="kratos-hentry kratos-page-inner clearfix">
+        <header class="kratos-page-header">
+            
+                <h1 class="kratos-page-title text-center" itemprop="name headline">Swizzling: The Snake Trying Not to Bite Itself</h1>
+            
+            <ul class="kratos-page-meta text-center">
+                <li><time datetime="2024-04-25T00:52:57.000Z" itemprop="datePublished"><i class="fa fa-calendar"></i> 2024-04-25</time></li>
+                <li itemprop="author" itemscope itemtype="https://schema.org/Person">
+                    <i class="fa fa-user"></i> 作者 <span itemprop="name">Yoake-Hayashi</span>
+                </li>
+                
+                    <li>
+                        <i class="fa fa-edit"></i> 
+                        
+                        
+                            ~8.63K
+                        
+                        字
+                    </li>
+                
+                
+                
+            </ul>
+        </header>
+        <div class="kratos-page-content kr-post">
+            
+            
+            
+                <div class="kratos-post-inner-toc toc-div-class" >
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Motivation"><span class="toc-number">1.</span> <span class="toc-text">Motivation</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Method"><span class="toc-number">2.</span> <span class="toc-text">Method</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Conclusion"><span class="toc-number">3.</span> <span class="toc-text">Conclusion</span></a></li></ol>
+                </div>
+            
+            <hr />
+            <div itemprop="articleBody"><p><strong>Abstract</strong> To avoid shared memory conflict in shared memory for each thread in different banks, swizzling is invented to create offsets for memory allocation. Which means, finding places for the memory that requested by a Layout.</p>
+<span id="more"></span>
+
+<blockquote>
+<p>In <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Computer_graphics">computer graphics</a>, <strong>swizzles</strong> are a class of operations that transform <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Vector_space">vectors</a> by rearranging components. Swizzles can also project from a vector of one dimensionality to a vector of another dimensionality, such as taking a three-dimensional vector and creating a two-dimensional or five-dimensional vector using components from the original vector.</p>
+<p>Wikipedia, “Swizzling”</p>
+</blockquote>
+<p>Previously: <a href>Hierarchical Tensor and the Story of Indexing</a></p>
+<p>Reference Link: <a target="_blank" rel="noopener" href="https://github.com/NVIDIA/cutlass">cutlass</a></p>
+<h2 id="Motivation"><a href="#Motivation" class="headerlink" title="Motivation"></a>Motivation</h2><p><img src="https://docs.nvidia.com/cuda/cuda-c-programming-guide/_images/memory-hierarchy.png" alt="Memory Hierarchy"></p>
+<p>Each thread are having their own memory. However, in tasks that needs the joint forces of threads, a shared memory is needed to perform better cooperation. For example, for the tasks of GEMM like <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>D</mi><mo>=</mo><mi>A</mi><mi>B</mi><mo>+</mo><mi>C</mi></mrow><annotation encoding="application/x-tex">D=AB+C</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">A</span><span class="mord mathnormal" style="margin-right:0.05017em;">B</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">C</span></span></span></span>, matrices are staying the shared memory waiting to be visited and calculated. Each part of the shared memory is carefully allocated in each bank.</p>
+<p><img src="/GPU/swizzling/image-20240424231020365.png" alt="image-20240424231020365"> </p>
+<p>Everything looks well, isn’t it?</p>
+<p><em><strong>What if they don’t?</strong></em></p>
+<img src="/GPU/swizzling/ddrorg.gif" alt="DDR SDRAM Memory Organization" style="zoom:50%;">
+
+<p>Let’s first have a glance at how threads extract bits from RAM. To access data, threads provide memory addresses they want, memory controllers will map them into chip selection signal, bank selection signal and physical address on chip(Row and column). Building the mapping of  addr-&gt;(bank, physical address). Moreover, the each bank and address index can only be used once. Thus, when it comes to situation where threads are trying to access different address of the same bank, it will cause a “BANK CONFLICT” which makes the data retrieval cannot be done in a single clock cycle. </p>
+<img src="/GPU/swizzling/image-20240424224721367.png" alt="Example of a bank conflict" style="zoom:50%;">
+
+<p>To accelerate the process, people have develop a way of mapping that can maximize the data extracted in each clock cycle. This is the “swizzling” we are talking about today.</p>
+<p>To simplify the entire process, we will state the physical address as row and banks as column. So the entire memory model looks like a big rectangle.</p>
+<h2 id="Method"><a href="#Method" class="headerlink" title="Method"></a>Method</h2><p>Let me try to revoke your memory about Data structure lectures. You may have heard about “Circular Queue”, and the core of it is taking the remainder as index of head and tail. This is also the core spirit of swizzling.</p>
+<div class="collapse-box-control">
+    <div class="collapse-box-header"><div class="collapse-box-icon"><i class="fa fa-plus"></i></div><span>A</span></div>
+    <div class="collapse-box-content"><div class="inner">
+        <img src="/GPU/swizzling/image-20240424224832048.png" alt="image-20240424224832048" style="zoom:30%;">
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">CircularQueue</span>():</span><br><span class="line">	<span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, size</span>): <span class="comment"># initializing the class</span></span><br><span class="line">		<span class="variable language_">self</span>.size = size</span><br><span class="line">		<span class="comment"># initializing queue with none</span></span><br><span class="line">		<span class="variable language_">self</span>.queue = [<span class="literal">None</span> <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(size)] </span><br><span class="line">		<span class="variable language_">self</span>.front = <span class="variable language_">self</span>.rear = -<span class="number">1</span></span><br><span class="line">        <span class="variable language_">self</span>.step = <span class="number">1</span></span><br><span class="line">	<span class="keyword">def</span> <span class="title function_">enqueue</span>(<span class="params">self, data</span>):</span><br><span class="line">		<span class="comment"># condition if queue is full</span></span><br><span class="line">		<span class="keyword">if</span> ((<span class="variable language_">self</span>.rear + <span class="number">1</span>) % <span class="variable language_">self</span>.size == <span class="variable language_">self</span>.front): </span><br><span class="line">			<span class="built_in">print</span>(<span class="string">&quot; Queue is Full\n&quot;</span>)</span><br><span class="line">		<span class="comment"># condition for empty queue</span></span><br><span class="line">		<span class="keyword">elif</span> (<span class="variable language_">self</span>.front == -<span class="number">1</span>): </span><br><span class="line">			<span class="variable language_">self</span>.front = <span class="number">0</span></span><br><span class="line">			<span class="variable language_">self</span>.rear = <span class="number">0</span></span><br><span class="line">			<span class="variable language_">self</span>.queue[<span class="variable language_">self</span>.rear] = data</span><br><span class="line">		<span class="keyword">else</span>:</span><br><span class="line">			<span class="comment"># next position of rear</span></span><br><span class="line">			<span class="variable language_">self</span>.rear = (<span class="variable language_">self</span>.rear + <span class="variable language_">self</span>.step) % <span class="variable language_">self</span>.size </span><br><span class="line">			<span class="variable language_">self</span>.queue[<span class="variable language_">self</span>.rear] = data</span><br><span class="line">			</span><br><span class="line">	<span class="keyword">def</span> <span class="title function_">dequeue</span>(<span class="params">self</span>):</span><br><span class="line">		<span class="keyword">if</span> (<span class="variable language_">self</span>.front == -<span class="number">1</span>): <span class="comment"># condition for empty queue</span></span><br><span class="line">			<span class="built_in">print</span> (<span class="string">&quot;Queue is Empty\n&quot;</span>)</span><br><span class="line">			</span><br><span class="line">		<span class="comment"># condition for only one element</span></span><br><span class="line">		<span class="keyword">elif</span> (<span class="variable language_">self</span>.front == <span class="variable language_">self</span>.rear): </span><br><span class="line">			temp=<span class="variable language_">self</span>.queue[<span class="variable language_">self</span>.front]</span><br><span class="line">			<span class="variable language_">self</span>.front = -<span class="number">1</span></span><br><span class="line">			<span class="variable language_">self</span>.rear = -<span class="number">1</span></span><br><span class="line">			<span class="keyword">return</span> temp</span><br><span class="line">		<span class="keyword">else</span>:</span><br><span class="line">			temp = <span class="variable language_">self</span>.queue[<span class="variable language_">self</span>.front]</span><br><span class="line">			<span class="variable language_">self</span>.front = (<span class="variable language_">self</span>.front + <span class="number">1</span>) % <span class="variable language_">self</span>.size</span><br><span class="line">			<span class="keyword">return</span> temp</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+ 
+    </div></div>
+    </div>
+
+
+
+<p>The swizzling problem can be modeled as follows. Given the memory offset from <code>Layout</code>, which can be seen as the logical address, the <code>Swizzle</code> method is required to find out the physical address on the chip.</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>O</mi><mi>f</mi><mi>f</mi><mi>s</mi><mi>e</mi><mi>t</mi><mo>=</mo><mtext>Swizzle</mtext><mo stretchy="false">(</mo><mtext>Layout</mtext><mo stretchy="false">(</mo><mi>i</mi><mi>n</mi><mi>d</mi><mi>e</mi><mi>x</mi><mo stretchy="false">)</mo><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">
+Offset=\text{Swizzle}(\text{Layout}(index))
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mord mathnormal" style="margin-right:0.10764em;">ff</span><span class="mord mathnormal">se</span><span class="mord mathnormal">t</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">Swizzle</span></span><span class="mopen">(</span><span class="mord text"><span class="mord">Layout</span></span><span class="mopen">(</span><span class="mord mathnormal">in</span><span class="mord mathnormal">d</span><span class="mord mathnormal">e</span><span class="mord mathnormal">x</span><span class="mclose">))</span></span></span></span></span>
+<p>Based on the circular queue example, we can easily formulate that we can build a “circular queue” for each thread in which heads and tails belongs to each thread  do not show up in the same bank.</p>
+<p>So we can build a class like this, which can be called by <code>Swizzle(Layout(index))</code>: </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Swizzle</span>:</span><br><span class="line">  	<span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, Bbits:<span class="built_in">int</span>, Mbase:<span class="built_in">int</span>, Sshift:<span class="built_in">int</span></span>):</span><br><span class="line">        <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">        :param Bbits: 2^B Row(Threads) in the arrangement.</span></span><br><span class="line"><span class="string">        :param Mbase: 2^M Number of layout indices to be the basic element contiguously stored in banks.</span></span><br><span class="line"><span class="string">        :param Sshift: 2^S Columns(Banks) in the arrangement.</span></span><br><span class="line"><span class="string">        &#x27;&#x27;&#x27;</span></span><br><span class="line">        <span class="keyword">assert</span> <span class="built_in">abs</span>(Sshift) &gt;= Bbits</span><br><span class="line">	<span class="keyword">def</span> <span class="title function_">__call__</span>(<span class="params">self, offset:<span class="built_in">int</span></span>):</span><br><span class="line">        <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">        :param offset: logical offset provided by Layout(index)</span></span><br><span class="line"><span class="string">        &#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">size</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span> &lt;&lt; (<span class="variable language_">self</span>.Bbits + <span class="variable language_">self</span>.Mbase + <span class="built_in">abs</span>(<span class="variable language_">self</span>.Sshift))</span><br></pre></td></tr></table></figure>
+
+
+<p>In one word, there will be <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mi>B</mi></msup></mrow><annotation encoding="application/x-tex">2^B</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8413em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.05017em;">B</span></span></span></span></span></span></span></span></span></span></span> threads looking for <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">⌈</mo><mi>L</mi><mi>a</mi><mi>y</mi><mi>o</mi><mi>u</mi><mi>t</mi><mi mathvariant="normal">.</mi><mi>s</mi><mi>i</mi><mi>z</mi><mi>e</mi><mo stretchy="false">(</mo><mo stretchy="false">)</mo><mi mathvariant="normal">/</mi><msup><mn>2</mn><mi>M</mi></msup><mo stretchy="false">⌉</mo></mrow><annotation encoding="application/x-tex">\lceil Layout.size()/2^M\rceil</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0913em;vertical-align:-0.25em;"></span><span class="mopen">⌈</span><span class="mord mathnormal">L</span><span class="mord mathnormal">a</span><span class="mord mathnormal">yo</span><span class="mord mathnormal">u</span><span class="mord mathnormal">t</span><span class="mord">.</span><span class="mord mathnormal">s</span><span class="mord mathnormal">i</span><span class="mord mathnormal">ze</span><span class="mopen">(</span><span class="mclose">)</span><span class="mord">/</span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.10903em;">M</span></span></span></span></span></span></span></span><span class="mclose">⌉</span></span></span></span> blocks stored in <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mi>S</mi></msup></mrow><annotation encoding="application/x-tex">2^S</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8413em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.05764em;">S</span></span></span></span></span></span></span></span></span></span></span> banks. Inside each bank, spaces for <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">⌈</mo><msup><mn>2</mn><mi>S</mi></msup><mi mathvariant="normal">/</mi><msup><mn>2</mn><mi>B</mi></msup><mo stretchy="false">⌉</mo></mrow><annotation encoding="application/x-tex">\lceil 2^S/2^B \rceil</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0913em;vertical-align:-0.25em;"></span><span class="mopen">⌈</span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.05764em;">S</span></span></span></span></span></span></span></span><span class="mord">/</span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.05017em;">B</span></span></span></span></span></span></span></span><span class="mclose">⌉</span></span></span></span> blocks are allocated. Inside the space, there will be <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">⌈</mo><mo stretchy="false">(</mo><mi>L</mi><mi>a</mi><mi>y</mi><mi>o</mi><mi>u</mi><mi>t</mi><mi mathvariant="normal">.</mi><mi>s</mi><mi>i</mi><mi>z</mi><mi>e</mi><mo stretchy="false">(</mo><mo stretchy="false">)</mo><mi mathvariant="normal">/</mi><msup><mn>2</mn><mi>M</mi></msup><mo stretchy="false">)</mo><mi mathvariant="normal">/</mi><msup><mn>2</mn><mi>B</mi></msup><mo stretchy="false">⌉</mo></mrow><annotation encoding="application/x-tex">\lceil (Layout.size()/2^M)/2^B\rceil</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0913em;vertical-align:-0.25em;"></span><span class="mopen">⌈(</span><span class="mord mathnormal">L</span><span class="mord mathnormal">a</span><span class="mord mathnormal">yo</span><span class="mord mathnormal">u</span><span class="mord mathnormal">t</span><span class="mord">.</span><span class="mord mathnormal">s</span><span class="mord mathnormal">i</span><span class="mord mathnormal">ze</span><span class="mopen">(</span><span class="mclose">)</span><span class="mord">/</span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.10903em;">M</span></span></span></span></span></span></span></span><span class="mclose">)</span><span class="mord">/</span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.05017em;">B</span></span></span></span></span></span></span></span><span class="mclose">⌉</span></span></span></span> blocks.</p>
+<p>The maximum “width” of threads shall be <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mi>B</mi></msup><mi mathvariant="normal">/</mi><msup><mn>2</mn><mi>M</mi></msup></mrow><annotation encoding="application/x-tex">2^B/2^M</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0913em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.05017em;">B</span></span></span></span></span></span></span></span><span class="mord">/</span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.10903em;">M</span></span></span></span></span></span></span></span></span></span></span>, and the maximum banks involved shall be <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mi>i</mi><mi>z</mi><mi>e</mi><mi mathvariant="normal">/</mi><msup><mn>2</mn><mi>M</mi></msup><mo>=</mo><msup><mn>2</mn><mrow><mi>B</mi><mo>+</mo><mi>S</mi></mrow></msup></mrow><annotation encoding="application/x-tex">size/2^M=2^{B+S}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0913em;vertical-align:-0.25em;"></span><span class="mord mathnormal">s</span><span class="mord mathnormal">i</span><span class="mord mathnormal">ze</span><span class="mord">/</span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.10903em;">M</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8413em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.05017em;">B</span><span class="mbin mtight">+</span><span class="mord mathnormal mtight" style="margin-right:0.05764em;">S</span></span></span></span></span></span></span></span></span></span></span></span>. </p>
+<p>Let’s first consider the situation where we can query all data we need in one cycle, which means every bank only contains just 1 or 0 “base” block. </p>
+<p>Since no banks will show up for the second time, we can simplify it as the circular queue above. Inside the big “queue”, all banks are allocated equal size of  “sub-queues”, whose head address (Remember the unit is index of <code>Layout</code>) can be: </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rear = (rear + <span class="number">2</span>^B) % size</span><br></pre></td></tr></table></figure>
+
+<p>The size is <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mrow><mi>B</mi><mo>+</mo><mi>M</mi><mo>+</mo><mi mathvariant="normal">∣</mi><mi>S</mi><mi mathvariant="normal">∣</mi></mrow></msup></mrow><annotation encoding="application/x-tex">2^{B+M+|S|}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.888em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.888em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.05017em;">B</span><span class="mbin mtight">+</span><span class="mord mathnormal mtight" style="margin-right:0.10903em;">M</span><span class="mbin mtight">+</span><span class="mord mtight">∣</span><span class="mord mathnormal mtight" style="margin-right:0.05764em;">S</span><span class="mord mtight">∣</span></span></span></span></span></span></span></span></span></span></span></span> in the unit of <code>Layout</code> index.</p>
+<p>Wait…How can we get the <code>rear</code> here?</p>
+<p>Clearly the <code>rear</code> is similar to offset, and it’s related to the pointers that steps towards after each insertion. We only need to convert it to the index in the unit of <code>Layout</code> index. </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">blk = offset//(<span class="number">2</span>**M) <span class="comment"># number of blocks ahead of index we look for</span></span><br><span class="line">in_blk_offset = offset%(<span class="number">2</span>**M)<span class="comment"># Local index inside block</span></span><br><span class="line"></span><br><span class="line">thd = blk//(<span class="number">2</span>**S) <span class="comment">#The index of thread that will visit it</span></span><br><span class="line"></span><br><span class="line">in_thd_offset = blk%(<span class="number">2</span>**S)<span class="comment">#Local index inside thread</span></span><br><span class="line"></span><br><span class="line">bnk = thd%(<span class="number">2</span>**B) <span class="comment">#The bank visited by thread</span></span><br><span class="line"><span class="comment"># We can also call it &quot;in_bnk_offset&quot; since bank starts from 0</span></span><br><span class="line"></span><br><span class="line">Swizzle(offset) = bnk*(<span class="number">2</span>**B)+in_thd_offset*(<span class="number">2</span>**S)+in_blk_offset</span><br></pre></td></tr></table></figure>
+
+<p>Looks easy, isn’t it? However, these operations are a bit slow in calculation, so we can setup them as shifting and bitwise operations.</p>
+<p>Calculation to bitwise operations</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mtable rowspacing="0.25em" columnalign="right left" columnspacing="0em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mi>n</mi><mi>u</mi><mi>m</mi><mo>∣</mo><msup><mn>2</mn><mi>n</mi></msup></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo>=</mo><mi>n</mi><mi>u</mi><mi>m</mi><mo>&gt;</mo><mo>&gt;</mo><mi>n</mi></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mi>n</mi><mi>u</mi><mi>m</mi><mo stretchy="false">(</mo><mspace></mspace><mspace width="1em"><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">d</mi></mrow><mtext> </mtext><mtext> </mtext><msup><mn>2</mn><mi>n</mi></msup><mo stretchy="false">)</mo></mspace></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo>=</mo><mi>n</mi><mi>u</mi><mi>m</mi><mi mathvariant="normal">&amp;</mi><mo stretchy="false">(</mo><msup><mn>2</mn><mi>n</mi></msup><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mi>n</mi><mi>u</mi><mi>m</mi><mo>⋅</mo><msup><mn>2</mn><mi>n</mi></msup></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo>=</mo><mi>n</mi><mi>u</mi><mi>m</mi><mo>&lt;</mo><mo>&lt;</mo><mi>n</mi></mrow></mstyle></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{aligned}
+num \mid 2^n&amp;=num&gt;&gt;n\\\\
+num(\mod 2^n)&amp;= num \&amp; (2^n-1) \\\\
+num\cdot 2^n&amp;=num&lt;&lt;n 
+\end{aligned}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:7.5em;vertical-align:-3.5em;"></span><span class="mord"><span class="mtable"><span class="col-align-r"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:4em;"><span style="top:-6.16em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">n</span><span class="mord mathnormal">u</span><span class="mord mathnormal">m</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∣</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7144em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span></span></span></span></span></span></span><span style="top:-4.66em;"><span class="pstrut" style="height:3em;"></span><span class="mord"></span></span><span style="top:-3.16em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">n</span><span class="mord mathnormal">u</span><span class="mord mathnormal">m</span><span class="mopen">(</span><span class="mspace allowbreak"></span><span class="mspace" style="margin-right:1em;"></span><span class="mord"><span class="mord"><span class="mord mathrm">mod</span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7144em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span><span style="top:-1.66em;"><span class="pstrut" style="height:3em;"></span><span class="mord"></span></span><span style="top:-0.16em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">n</span><span class="mord mathnormal">u</span><span class="mord mathnormal">m</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7144em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:3.5em;"><span></span></span></span></span></span><span class="col-align-l"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:4em;"><span style="top:-6.16em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord mathnormal">n</span><span class="mord mathnormal">u</span><span class="mord mathnormal">m</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&gt;&gt;</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord mathnormal">n</span></span></span><span style="top:-3.16em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord mathnormal">n</span><span class="mord mathnormal">u</span><span class="mord mathnormal">m</span><span class="mord">&amp;</span><span class="mopen">(</span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7144em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">1</span><span class="mclose">)</span></span></span><span style="top:-0.16em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord mathnormal">n</span><span class="mord mathnormal">u</span><span class="mord mathnormal">m</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&lt;&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord mathnormal">n</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:3.5em;"><span></span></span></span></span></span></span></span></span></span></span></span>
+<p>Here the <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mi>n</mi></msup><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">2^n-1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7477em;vertical-align:-0.0833em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6644em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span> is used as a “mask” to obtain the remainder. </p>
+<p>Actually, we can simply send the offsets to where they need to go and do calculations with the corresponding slices, and ignore other digits! </p>
+<p>How can we send them there? Where is the corresponding slices? </p>
+<p>First, let’s rethink the sub-queue example. An offset can be hashed into a (<code>bnk</code>, <code>thd</code>, <code>blk</code>). Among these variables, who can appear for the second time for another offset without causing bank conflict? </p>
+<p>The answer is <code>bank</code>! </p>
+<p>(Hint, think of the stages where banks are not enough and we need to visit RAM for the second time)</p>
+<p>Let’s take a 32bit logical address as example:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">assign offset[<span class="number">31</span>:<span class="number">0</span>]</span><br><span class="line">assign swizzle[<span class="number">31</span>:<span class="number">0</span>]</span><br><span class="line"><span class="comment"># Extract the part for bnk:</span></span><br><span class="line">bnk = offset&gt;&gt;(M+S) &amp; (<span class="number">1</span>&lt;&lt;B-<span class="number">1</span>) = offset&amp;(<span class="number">1</span>&lt;&lt;(S+M+B)-<span class="number">1</span>)[<span class="number">31</span>:S+M]<span class="comment">#bit_msk</span></span><br><span class="line">thd = bnk&gt;&gt;S = offset&gt;&gt;(M+S)=offset[<span class="number">31</span>:M+S]</span><br><span class="line">blk = offset&gt;&gt;M = offset[<span class="number">31</span>:S]</span><br><span class="line"></span><br><span class="line">in_blk_offset = offset &amp; (<span class="number">1</span>&lt;&lt;M-<span class="number">1</span>) = offset[M-<span class="number">1</span>:<span class="number">0</span>]</span><br><span class="line">in_thd_offset = (offset&gt;&gt;M) &amp; (<span class="number">1</span>&lt;&lt;S-<span class="number">1</span>)=offset&amp;(<span class="number">1</span>&lt;&lt;(S+M)-<span class="number">1</span>)[<span class="number">31</span>:M]</span><br><span class="line"></span><br><span class="line"><span class="comment">#To take the slice we need, we can</span></span><br><span class="line">(offset &amp; (bnk&lt;&lt;S))</span><br><span class="line"><span class="comment"># Then align to the place we need</span></span><br><span class="line">(offset &amp; (bnk&lt;&lt;S))&gt;&gt;S</span><br><span class="line"><span class="comment"># Finally, let&#x27;s create a hashing from the block to swizzle</span></span><br><span class="line">swizzle = offset ^ ((offset &amp; (bnk&lt;&lt;S))&gt;&gt;S)</span><br></pre></td></tr></table></figure>
+
+<p>p.s. You can read more about XOR and its applications by learning about <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Cyclic_redundancy_check">Cyclic Redundancy Check</a>.</p>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>what a marvelous journey back to discrete mathematics, computer architecture and Verilog! This implementation has provided me with a tremendous insight into the application of number theory in designing memory mapping. Previously what I am trying to do is proving everything is alright via strict clock constraints and complex inter-clock domain techniques so it can pass the STA and other test cases. However, via number theory, we can reduce the stress by proving things will work mathematically. </p>
+<p>Quite a pleasure to be able to sit still and read through the project!</p>
+</div>
+        </div>
+        
+            <div class="kratos-copyright text-center clearfix">
+                <span itemprop="copyrightNotice">本作品采用 <a rel="license nofollow" target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/">知识共享署名-相同方式共享 4.0 国际许可协议</a> 进行许可</span>
+            </div>
+        
+        <footer class="kratos-entry-footer clearfix">
+            
+            
+            
+                <div class="post-actions text-center clearfix" id="post-actions">
+                
+                
+                    <a class="share" href="javascript:;" onclick="krOpenShareModal()"><i class="fa fa-share-alt"></i> 分享</a>
+                
+                </div>
+            
+            <div class="footer-tag clearfix">
+                <div class="pull-left">
+                <i class="fa fa-tags"></i>
+                    <a class="tag-none-link" href="/tags/Architecture/" rel="tag">Architecture</a>, <a class="tag-none-link" href="/tags/SIMT/" rel="tag">SIMT</a>
+                </div>
+                <div class="pull-date">
+                    <time datetime="2025-04-10T16:39:17.460Z" itemprop="dateModified">最后编辑：2025-04-10</time>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+        <nav class="navigation post-navigation clearfix" role="navigation">
+            
+            <div class="nav-previous clearfix">
+                <a title=" [Reading]PARIS: Part-level Reconstruction and Motion Analysis for Articulated Objects" href="/NeRF/PARIS.html"><i class="fa fa-angle-left"></i> 上一篇</a>
+            </div>
+            
+            
+            <div class="nav-next clearfix">
+                <a title=" Notes on ScoreGrad" href="/diffusion/scoregrad.html">下一篇 <i class="fa fa-angle-right"></i></a>
+            </div>
+            
+        </nav>
+    
+    
+        <div class="comment-post">
+            
+        </div>
+    
+</article>
+
+        
+
+            </section>
+
+            
+                
+
+<section id="kratos-widget-area" class="col-md-4 hidden-xs hidden-sm">
+    <!-- 文章和页面根据splitter来分割，没有的话就从头开始设置为sticky -->
+    
+    
+                <aside id="krw-about" class="widget widget-kratos-about clearfix">
+    <div class="photo-background"></div>
+    <div class="photo-wrapper clearfix">
+        <div class="photo-wrapper-tip text-center">
+            <img class="about-photo" src="https://github.com/sablin39.png" alt="Yoake-Hayashi" loading="lazy" decoding="auto" />
+        </div>
+    </div>
+    <div class="textwidget">
+        <p class="text-center">This is Yoake-Hayashi (2003-2021). A non-bi cyberneticist who is 18 years old forever.</p>
+    </div>
+    <div class="site-meta">
+        <a class="meta-item" href="/archives/">
+            <span class="title">
+                文章
+            </span>
+            <span class="count">
+                16
+            </span>
+        </a>
+        <a class="meta-item" href="/categories/">
+            <span class="title">
+                分类
+            </span>
+            <span class="count">
+                10
+            </span>
+        </a>
+        <a class="meta-item" href="/tags/">
+            <span class="title">
+                标签
+            </span>
+            <span class="count">
+                23
+            </span>
+        </a>
+    </div>
+</aside>
+            
+                    <div class="sticky-area">
+                
+                    <aside id="krw-toc" class="widget widget-kratos-toc clearfix toc-div-class" >
+    <div class="photo-background"></div>
+    <h4 class="widget-title no-after">
+        <i class="fa fa-compass"></i>
+        文章目录
+        <span class="toc-progress-bar" role="progressbar" aria-label="阅读进度："></span>
+    </h4>
+    <div class="textwidget">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Motivation"><span class="toc-text">Motivation</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Method"><span class="toc-text">Method</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Conclusion"><span class="toc-text">Conclusion</span></a></li></ol>
+    </div>
+</aside>
+                
+                
+  <aside id="krw-categories" class="widget widget-kratos-categories clearfix">
+    <h4 class="widget-title"><i class="fa fa-folder"></i>分类列表</h4>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/EBM/">EBM</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/GPU/">GPU</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Interactive-Perception/">Interactive-Perception</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/LLM/">LLM</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/NeRF/">NeRF</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Project-Management/">Project-Management</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/diffusion/">diffusion</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/game-theory/">game-theory</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/healthcare/">healthcare</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/robotics/">robotics</a><span class="category-list-count">1</span></li></ul>
+  </aside>
+
+
+            
+                
+  <aside id="krw-tags" class="widget widget-kratos-tags clearfix">
+    <h4 class="widget-title"><i class="fa fa-tags"></i>标签聚合</h4>
+      <div class="tag-clouds">
+        <a href="/tags/Architecture/" style="font-size: 0.6em;">Architecture</a> <a href="/tags/Articulation-Reconstruction/" style="font-size: 0.73em;">Articulation Reconstruction</a> <a href="/tags/Computer-Vision/" style="font-size: 0.6em;">Computer-Vision</a> <a href="/tags/Deep-Learning/" style="font-size: 0.6em;">Deep-Learning</a> <a href="/tags/EBM/" style="font-size: 0.73em;">EBM</a> <a href="/tags/Finance/" style="font-size: 0.6em;">Finance</a> <a href="/tags/Game-Theory/" style="font-size: 0.6em;">Game-Theory</a> <a href="/tags/HRT/" style="font-size: 0.6em;">HRT</a> <a href="/tags/Interactive-Perception/" style="font-size: 0.67em;">Interactive-Perception</a> <a href="/tags/LLM/" style="font-size: 0.6em;">LLM</a> <a href="/tags/Life-with-ADHD/" style="font-size: 0.6em;">Life with ADHD</a> <a href="/tags/MCTS/" style="font-size: 0.6em;">MCTS</a> <a href="/tags/NeRF/" style="font-size: 0.8em;">NeRF</a> <a href="/tags/SIMT/" style="font-size: 0.6em;">SIMT</a> <a href="/tags/UAV/" style="font-size: 0.6em;">UAV</a> <a href="/tags/diffusion/" style="font-size: 0.73em;">diffusion</a> <a href="/tags/localization/" style="font-size: 0.6em;">localization</a> <a href="/tags/optimization/" style="font-size: 0.6em;">optimization</a>
+      </div>
+  </aside>
+
+            
+                
+  <aside id="krw-posts" class="widget widget-kratos-posts">
+  <h4 class="widget-title"><i class="fa fa-file"></i>最新文章</h4>
+  <div class="tab-content">
+      <ul class="list-group">
+        
+        
+          
+          
+            <a class="list-group-item" href="/healthcare/adhd-hrt-notes.html"><i class="fa fa-book"></i> About ADHD Symptoms and Hormones</a>
+            
+          
+        
+          
+          
+            <a class="list-group-item" href="/LLM/macro-o1.html"><i class="fa fa-book"></i> Brief Dive into Macro-o1 and o1-like LLMs</a>
+            
+          
+        
+          
+          
+            <a class="list-group-item" href="/game-theory/kyle-market-model.html"><i class="fa fa-book"></i> Kyle's Market Micro-architecture Model</a>
+            
+          
+        
+          
+          
+            <a class="list-group-item" href="/EBM/mpc-diffusion-policy.html"><i class="fa fa-book"></i> From MPC to Diffusion Policy</a>
+            
+          
+        
+          
+          
+            <a class="list-group-item" href="/EBM/lecun-ebm-2021.html"><i class="fa fa-book"></i> Notes on 'The Energy-Based Learning Model' by Yann LeCun, 2021</a>
+            
+          
+        
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+      </ul>
+  </div>
+  </aside>
+
+            
+    </div>
+</section>
+            
+
+        
+
+                </div>
+    </div>
+</div>
+
+<footer>
+    <div id="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-md-offset-3 footer-list text-center">
+                    <ul class="kratos-social-icons">
+                        
+                            <li>
+                                <a href="https://github.com/sablin39" target="_blank" rel="nofollow">
+                                    <i class="fa fa-github"></i>
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <a href="/atom.xml" target="_blank" rel="nofollow">
+                                    <i class="fa fa-rss"></i>
+                                </a>
+                            </li>
+                        
+                    </ul>
+                    <ul class="kratos-copyright">
+                        <div>
+                            <li>&copy; 2025 О.К.Б Саблин 版权所有.</li>
+                            <li>本站已在风雨中飘摇<span id="kr-since">Loading...</span></li>
+                        </div>
+                        <div>
+                            <li>自豪地使用 <a href="https://github.com/Candinya/Kratos-Rebirth" target="_blank">Kratos:Rebirth</a> 主题</li>
+                            <li>站点由 <a href="https://github.com/sablin39/" target="_blank">Yoake-Hayashi</a> 用 <i class="fa fa-heart" style="color:#d43f57"></i> 搭建</li>
+                        </div>
+                        <!-- 额外的追加注入项 -->
+                        
+                            <div>
+                                
+                                    <li>由 <a href="https://hexo.io" target="_blank" rel="nofollow">Hexo</a> 强力驱动</li>
+                                
+                                    <li>在 <a href="https://github.io" target="_blank">Github Pages</a> 暖心托管</li>
+                                
+                            </div>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="kr-tool text-center">
+            <div class="tool">
+                
+                    <div class="box search-box">
+                        <a href="/search">
+                            <span class="fa fa-search"></span>
+                        </a>
+                    </div>
+                
+                <div class="box theme-box" id="theme-toggle">
+                    <span class="fa fa-adjust"></span>
+                </div>
+            </div>
+            <div id="gotop-box" class="box gotop-box">
+                <span class="fa fa-chevron-up"></span>
+            </div>
+        </div>
+    </div>
+</footer>
+</div>
+</div>
+
+
+
+
+    <div id="kr-share-modal" class="kr-modal">
+    <div class="kr-modal-bg" onclick="krCloseShareModal()"></div>
+    <div class="kr-modal-content">
+        <div class="kr-modal-header">
+            <div class="kr-modal-icon">
+                <i class="fa fa-share-alt"></i>
+            </div>
+            <div class="kr-modal-title">分享这一刻</div>
+            <button class="kr-modal-close" onclick="krCloseShareModal()">
+                <i class="fa fa-times-circle"></i>
+            </button>
+        </div>
+        <div class="kr-modal-body">
+            <div class="kr-share-message">让朋友们也来瞅瞅！</div>
+            <div class="kr-share-qr" id="kr-share-qr"></div>
+            <div class="kr-share-platforms">
+                
+                    <button class="kr-share-platform-button" style="color: #62b6e7;" title="喵窝" onclick="krShareModalOpenPlatform('https://nya.one/share?text=%3E%20$TITLE%0A%3E%0A%3E%20$SUMMARY%0A----%20$SITE%0A%0A$URL')">
+                        <svg fill="currentColor" width="18" height="18" viewBox="0 0 329 388"><path d="M0,36.226c0,-19.993 16.233,-36.226 36.226,-36.226c13.788,0 25.787,7.719 31.908,19.068l188.366,229.845l0,-111.259c-6.356,5.508 -14.645,8.843 -23.707,8.843c-19.994,0 -36.226,-16.232 -36.226,-36.226c-0,-8.551 2.968,-16.413 7.93,-22.613l-0.015,-0.013l56.614,-69.08c6.2,-11.073 18.047,-18.565 31.63,-18.565c19.994,0 36.227,16.233 36.227,36.226l-0,314.644c-0,19.994 -16.233,36.226 -36.227,36.226c-13.166,0 -24.701,-7.039 -31.044,-17.555l-189.229,-230.899l-0,212.228c-0,19.994 -16.233,36.226 -36.227,36.226c-19.993,0 -36.226,-16.232 -36.226,-36.226l0,-314.644Z" /></svg>
+                    </button>
+                
+            </div>
+        </div>
+    </div>
+</div>
+<script defer src="/js/kr-modal/share.min.js"></script>
+
+
+
+<!-- 额外的追加注入项 -->
+
+
+        <script>
+    if (!window.kr) {
+        window.kr = {};
+    }
+    window.kr.notMobile = (!(navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)));
+    window.kr.siteRoot = "/";
+</script>
+
+
+  <script defer src="/vendors/nprogress@0.2.0/nprogress.js"></script>
+
+
+
+  <script defer src="/vendors/viewerjs@1.11.6/dist/viewer.min.js"></script>
+
+
+<script defer src="/js/kr-core.min.js"></script>
+
+
+  <script defer src="/js/kr-pjax.min.js"></script>
+
+
+<!-- 额外的追加注入项 -->
+
+
+    </body>
+</html>
