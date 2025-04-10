@@ -3,16 +3,15 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: 'Kratos : Rebirth'
-subtitle: '一个可爱而现代的 Hexo 主题'
-description: '欢迎使用这个主题，希望能给您带来美好的体验。'
-keywords: 
-- hexo
-- theme
-- kratos-rebirth
-author: All contributors
-language: zh
-timezone: ''
+title: О.К.Б Саблин
+#subtitle: 'Привет! Enjoy yourself (*´∀`)'
+subtitle: '我れ狂か愚か知らず，一路遂に奔騰するのみ'
+description: 'This is Yoake-Hayashi (2003-2021). A non-bi cyberneticist who is 18 years old forever.' 
+
+keywords:
+author: 'Yoake-Hayashi'
+language: en
+timezone: 'UTC'
 
 # URL
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
@@ -33,6 +32,7 @@ category_dir: categories
 code_dir: downloads/code
 i18n_dir: :lang
 skip_render:
+  - "HTML/**"
 
 # Writing
 new_post_name: :title.md # File name of new posts
@@ -72,7 +72,7 @@ index_generator:
   order_by: -date
 
 # Category & Tag
-default_category: 无家可归的文章君T-T
+default_category: uncategorized
 category_map:
 tag_map:
 
@@ -131,4 +131,8 @@ sitemap:
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
-  type: ''
+  type: git
+  #repo: https://gitee.com/anastasia-lynn/anastasia-lynn
+  repo: git@github.com:sablin39/sablin39.github.io.git
+  #repo: https://github.com/tchapaiev/tchapaiev.github.io.git
+  branch: page
