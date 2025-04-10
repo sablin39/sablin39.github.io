@@ -10,4 +10,8 @@ comments: false
 toc: true
 donate: false
 share: true
+show_copyright: false
 ---
+
+
+<!-- more -->
