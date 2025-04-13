@@ -37,11 +37,11 @@ jobs:
             ${{ runner.os }}-
       - name: Init Node.js # 安装源代码所需插件
         run: |
-          npm install 
+          pnpm install 
           echo "init node successful"
       - name: Install Hexo-cli # 安装 Hexo
         run: |
-          npm install -g hexo-cli --save
+          pnpm install -g hexo-cli --save
           echo "install hexo successful"
       - name: Build Blog # 编译创建静态博客文件
         run: |
