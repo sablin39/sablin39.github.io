@@ -15,6 +15,10 @@ Macro-o1 7B is the first o1-like open source LLM. In this post, we will dive int
 - Code link: https://github.com/AIDC-AI/Marco-o1
 - Paper link: https://arxiv.org/abs/2411.14405
 
+> Update on 2025/04/10:
+> Though this model is quite suck compared with GRPO+SFT pipeline as Deepseek-R1, its token-level value inside MCTS is quite interesting. This may potentially be a trick for pretraining small langugage model of different structure than GPT. A token-level reward formulation like this is easy to be derived since it shares the same formulation as perplexity during pretraining. However, it offers too much uncessary information in SFT stage and may cause instability. 
+> Always be open to new ideas and value possibilities. No one knows the value of an infant.
+
 ![Refer to caption](macro-o1/intro_2.jpg)
 
 # Training Paradigm
@@ -73,10 +77,5 @@ def generate_response(model, tokenizer,
     return tokenizer.decode(generated_ids[0][input_ids.shape[-1]:], skip_special_tokens=True)
 ```
 
-Such generation process exposes the logits of tokens to achieve the above MCTS procedures. 
+Such generation process exposes the logits of tokens to achieve the above MCTS procedures. Such token-level, or to say, logit-level value formulation is quite interesting and can be seen as a successor of sampling methods like beam search. 
 
-
-
-
-
-In Macro's implementation, `<Thought>` and `<\Thought>` are not special tokens!
