@@ -17,9 +17,13 @@ jobs:
       - uses: actions/checkout@v4 # 拉取仓库代码
         with:
           submodules: recursive
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
       - uses: actions/setup-node@v4 # 设置 node.js 环境
         with:
-          node-version: '18.17.1'
+          node-version: 22
+          cache: 'pnpm' # 设置缓存 npm 包
       - name: Cache node_modules # 缓存 node_modules，提高编译速度
         uses: actions/cache@v3 # 使用最新的缓存 action
         env:
