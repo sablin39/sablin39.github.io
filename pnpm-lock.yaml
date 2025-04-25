@@ -57,8 +57,8 @@ importers:
         specifier: 3.0.0-alpha.3
         version: 3.0.0-alpha.3
       marked:
-        specifier: ^15.0.4
-        version: 15.0.8
+        specifier: ^15.0.11
+        version: 15.0.11
 
 packages:
 
@@ -728,8 +728,8 @@ packages:
     resolution: {integrity: sha512-GcRz3AWTqSUphY3vsUqQSFMbgR38a4Lh3GWlHRh/7MRwz8mcu9n2IO7HOh+bXHrR9kOPDl5RNCaEsrneb+xhHQ==}
     hasBin: true
 
-  marked@15.0.8:
-    resolution: {integrity: sha512-rli4l2LyZqpQuRve5C0rkn6pj3hT8EWPC+zkAxFTAJLxRbENfTAhEQq9itrmf1Y81QtAX5D/MYlGlIomNgj9lA==}
+  marked@15.0.11:
+    resolution: {integrity: sha512-1BEXAU2euRCG3xwgLVT1y0xbJEld1XOrmRJpUwRCcy7rxhSCwMrmEu9LXoPhHSCJG41V7YcQ2mjKRr5BA3ITIA==}
     engines: {node: '>= 18'}
     hasBin: true
 
@@ -1656,7 +1656,7 @@ snapshots:
       dompurify: 3.2.4
       hexo-util: 3.3.0
       jsdom: 25.0.1
-      marked: 15.0.8
+      marked: 15.0.11
     transitivePeerDependencies:
       - bufferutil
       - canvas
@@ -1918,7 +1918,7 @@ snapshots:
       mdurl: 1.0.1
       uc.micro: 1.0.6
 
-  marked@15.0.8: {}
+  marked@15.0.11: {}
 
   math-intrinsics@1.1.0: {}
 
