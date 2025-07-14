@@ -54,8 +54,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       hexo-theme-kratos-rebirth:
-        specifier: 3.0.0-alpha.3
-        version: 3.0.0-alpha.3
+        specifier: 3.0.0-beta.1
+        version: 3.0.0-beta.1
       marked:
         specifier: ^15.0.4
         version: 15.0.8
@@ -563,8 +563,8 @@ packages:
     resolution: {integrity: sha512-u4s0ty9Aew6jV+a9oMrXBwhrRpUQ0U8PWM/88a5aHgDru58VY81mVrxOFxs788NAsWQ8OvsJtF5m7mnXoRnSIA==}
     engines: {node: '>=12.13.0'}
 
-  hexo-theme-kratos-rebirth@3.0.0-alpha.3:
-    resolution: {integrity: sha512-A+D/yMlMtOXbhzHylHVQUJNhd83dmAc6kc2RX8/m+eRpdZCJ2WBK+uGA0wOAYqgdGVopBoWZqwUKRIo+Yaz2OQ==}
+  hexo-theme-kratos-rebirth@3.0.0-beta.1:
+    resolution: {integrity: sha512-oV+l9wt35XpdKNORvt8vV8ckTBzn54Svm+/6rBomd/bXxVI5S6l+9NIjqGWvEwfd0rJMWWOl/mzPF6CcUKQm4A==}
 
   hexo-util@0.6.3:
     resolution: {integrity: sha512-zPxaqCWZz3/25SAB4FlrRtWktJ+Pr+vBiv/nyHpXKgXPt1m70liViKlRwWLqDmRjJ72x6/k4qCEeXHajvcGHUw==}
@@ -1683,7 +1683,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  hexo-theme-kratos-rebirth@3.0.0-alpha.3: {}
+  hexo-theme-kratos-rebirth@3.0.0-beta.1: {}
 
   hexo-util@0.6.3:
     dependencies:
