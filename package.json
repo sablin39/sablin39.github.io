@@ -33,6 +33,6 @@
     "hexo-renderer-stylus": "^3.0.1",
     "hexo-server": "^3.0.0",
     "hexo-theme-kratos-rebirth": "3.0.0-alpha.3",
-    "marked": "^15.0.4"
+    "marked": "^16.4.1"
   }
 }
