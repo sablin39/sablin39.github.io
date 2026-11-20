@@ -111,10 +111,8 @@ plugin:
  - hexo-footnote
 
 katex:
-  enable: true
-  per_page: false
-  strict: false
-  options:
+  render_options:
+    strict: false
     throwOnError: false
     errorColor: '#cc0000'
 

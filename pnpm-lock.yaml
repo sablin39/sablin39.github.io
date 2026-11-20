@@ -48,8 +48,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       hexo-theme-kratos-rebirth:
-        specifier: git+https://github.com/sablin39/Kratos-Rebirth.git#fbbe0993085aa15034fef71495b69d6d206c17fe
-        version: https://codeload.github.com/sablin39/Kratos-Rebirth/tar.gz/fbbe0993085aa15034fef71495b69d6d206c17fe
+        specifier: git+https://github.com/sablin39/Kratos-Rebirth.git#05f85062d018b04c5d4d1002857745780944c7cb
+        version: https://codeload.github.com/sablin39/Kratos-Rebirth/tar.gz/05f85062d018b04c5d4d1002857745780944c7cb
 
 packages:
 
@@ -494,8 +494,8 @@ packages:
     resolution: {integrity: sha512-u4s0ty9Aew6jV+a9oMrXBwhrRpUQ0U8PWM/88a5aHgDru58VY81mVrxOFxs788NAsWQ8OvsJtF5m7mnXoRnSIA==}
     engines: {node: '>=12.13.0'}
 
-  hexo-theme-kratos-rebirth@https://codeload.github.com/sablin39/Kratos-Rebirth/tar.gz/fbbe0993085aa15034fef71495b69d6d206c17fe:
-    resolution: {tarball: https://codeload.github.com/sablin39/Kratos-Rebirth/tar.gz/fbbe0993085aa15034fef71495b69d6d206c17fe}
+  hexo-theme-kratos-rebirth@https://codeload.github.com/sablin39/Kratos-Rebirth/tar.gz/05f85062d018b04c5d4d1002857745780944c7cb:
+    resolution: {tarball: https://codeload.github.com/sablin39/Kratos-Rebirth/tar.gz/05f85062d018b04c5d4d1002857745780944c7cb}
     version: 3.0.1
 
   hexo-util@0.6.3:
@@ -1492,7 +1492,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  hexo-theme-kratos-rebirth@https://codeload.github.com/sablin39/Kratos-Rebirth/tar.gz/fbbe0993085aa15034fef71495b69d6d206c17fe: {}
+  hexo-theme-kratos-rebirth@https://codeload.github.com/sablin39/Kratos-Rebirth/tar.gz/05f85062d018b04c5d4d1002857745780944c7cb: {}
 
   hexo-util@0.6.3:
     dependencies:
