@@ -26,11 +26,11 @@ toc: true
 
 ### 项目的特点
 
-![](project.png)
+![](pro-mgt-lecs/project.png)
 
 ### 组织项目管理
 
-![](organize.png)
+![](pro-mgt-lecs/organize.png)
 
 
 
@@ -54,7 +54,7 @@ toc: true
 
 #### Example 经典瀑布开发模型
 
-![](waterfall.png)
+![](pro-mgt-lecs/waterfall.png)
 
 每一步需要很完善，很到位
 
@@ -72,11 +72,11 @@ toc: true
 
 客户可提前了解工作成果
 
-![](increment.png)
+![](pro-mgt-lecs/increment.png)
 
 ### 适应性开发（敏捷开发）
 
-![](scrum.png)
+![](pro-mgt-lecs/scrum.png)
 
 *Product Backlog:* 客户需求池
 
@@ -86,9 +86,9 @@ toc: true
 
 ### 综合对比
 
-![](3-1.png)
+![](pro-mgt-lecs/3-1.png)
 
-![](stacey.png)
+![](pro-mgt-lecs/stacey.png)
 
 
 
@@ -102,7 +102,7 @@ toc: true
 
 #### Example 1. 工程建设
 
-![](proj-stage.png)
+![](pro-mgt-lecs/proj-stage.png)
 
 按照专业每个阶段设置关口，及时验收，满足条件才可进入下一阶段
 
@@ -134,7 +134,7 @@ toc: true
 
 ### 凸显模型 (Salience Model)
 
-![](salience.png)
+![](pro-mgt-lecs/salience.png)
 
 (蓝色为所具备特征)
 

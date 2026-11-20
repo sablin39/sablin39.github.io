@@ -3,6 +3,7 @@
   "description": "开箱即用的 Kratos : Rebirth 主题博客模板",
   "version": "0.0.0",
   "private": false,
+  "packageManager": "pnpm@10.30.1",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kratos-rebirth/quickstart.git"
@@ -18,7 +19,6 @@
   },
   "dependencies": {
     "hexo": "^7.3.0",
-    "hexo-asset-image": "^1.0.0",
     "hexo-deployer-git": "^4.0.0",
     "hexo-filter-katex": "^1.1.0",
     "hexo-footnote": "^1.0.4",
@@ -30,9 +30,7 @@
     "hexo-generator-tag": "^2.0.0",
     "hexo-renderer-ejs": "^2.0.0",
     "hexo-renderer-marked": "^7.0.1",
-    "hexo-renderer-stylus": "^3.0.1",
     "hexo-server": "^3.0.0",
-    "hexo-theme-kratos-rebirth": "3.0.0-alpha.3",
-    "marked": "^15.0.4"
+    "hexo-theme-kratos-rebirth": "git+https://github.com/sablin39/Kratos-Rebirth.git#fbbe0993085aa15034fef71495b69d6d206c17fe"
   }
 }

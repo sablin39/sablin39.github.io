@@ -6,7 +6,7 @@
 title: О.К.Б Саблин
 #subtitle: 'Привет! Enjoy yourself (*´∀`)'
 subtitle: '我れ狂か愚か知らず，一路遂に奔騰するのみ'
-description: 'This is Yoake-Hayashi (2003-2021). A non-bi cyberneticist who is 18 years old forever.' 
+description: 'This is Yoake-Hayashi. An agender cyberneticist who is 18 years old forever.'
 
 keywords:
 author: 'Yoake-Hayashi'
@@ -15,7 +15,7 @@ timezone: 'UTC'
 
 # URL
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
-url: https://blog.okbsablin.su
+url: https://sablin39.github.io
 root:
 permalink: :category/:title.html
 permalink_defaults:

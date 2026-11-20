@@ -5,6 +5,7 @@ on:
     branches: [main, master] # 当监测 main,master 的 push
     paths: # 监测所有 source 目录下的文件变动，所有 yml,json 后缀文件的变动，以及scripts目录。
       - '*.json'
+      - 'pnpm-*.yaml'
       - '**.yml'
       - '**/source/**'
       - '**/scripts/**'
@@ -18,35 +19,16 @@ jobs:
         with:
           submodules: recursive
       - uses: pnpm/action-setup@v4
-        with:
-          version: 10
       - uses: actions/setup-node@v4 # 设置 node.js 环境
         with:
           node-version: 22
           cache: 'pnpm' # 设置缓存 npm 包
-      - name: Cache node_modules # 缓存 node_modules，提高编译速度
-        uses: actions/cache@v3 # 使用最新的缓存 action
-        env:
-          cache-name: cache-node-modules
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
       - name: Init Node.js # 安装源代码所需插件
-        run: |
-          pnpm install 
-          echo "init node successful"
-      - name: Install Hexo-cli # 安装 Hexo
-        run: |
-          pnpm install -g hexo-cli --save
-          echo "install hexo successful"
+        run: pnpm install --frozen-lockfile
       - name: Build Blog # 编译创建静态博客文件
         run: |
-          hexo clean
-          hexo g
+          pnpm run clean
+          pnpm run build
           echo "build blog successful"
       - name: Deploy Configs # 设置 git 信息并推送静态博客文件
         env:
@@ -58,6 +40,6 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           git config --global user.name "sablin39"
           git config --global user.email "1020030829@qq.com"
-          hexo deploy
+          pnpm run deploy
 
       - run: echo "Deploy Successful!"
