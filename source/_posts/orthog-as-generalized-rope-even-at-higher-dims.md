@@ -1,5 +1,5 @@
 ---
-title: 'Orthogonal Matrix can Work as up to $\lfloor n/2 \rfloor$ Generalized RoPE'
+title: 'Why Orthogonal RoPE Supports at Most $\lfloor n/2 \rfloor$ Independent Position Directions'
 comments: false
 toc: true
 donate: false
@@ -11,308 +11,212 @@ tags: [algebra,"lie group and lie algebra"]
 cover: 
 ---
 
-In this post we will prove that an orthogonal matrix can work as a "Generalized RoPE" of at least 1D and up to $\lfloor n/2 \rfloor$ dimensions. We will first revisit the basic properties of RoPE and the failure of deriving 2D RoPE from quaternion and explain beyond the "non-commutative" statement. We then construct the higher-dimensional form and recover standard axial RoPE as a special case. Readers are only required to have basic knowledge about Lie Group and Lie Algebra from 《视觉SLAM十四讲(第二版)》Chapter 4. 
+With $n$ real features, a smooth family of orthogonal transformations can encode at most $\lfloor n/2\rfloor$ independent position directions. The limiting factor is how rotations compose when a position has more than one coordinate. A quaternion attempt and the axial RoPE used in vision-language models illustrate what this composition requires.
 
 <!-- more -->
 
-## A Quick Review of RoPE, Orthogonal Matrix, Lie Group and Lie Algebra
+## A quick review of RoPE and orthogonal matrices
 
-Consider positions $\mathsf{x},\mathsf{y}\in\mathbb{R}^p$, where $p=1$ recovers scalar positions, and query and key vectors $q,k\in\mathbb{R}^n$. RoPE encodes them as $\mathcal{R}_{\mathsf{x}}q$ and $\mathcal{R}_{\mathsf{y}}k$, respectively, where $\mathcal{R}_{\mathsf{x}}\in\mathbb{R}^{n\times n}$. The encoding should make attention depend on the relative position while preserving vector lengths. We separate the position-addition structure RoPE needs from the orthogonality available for its rotation matrices:
-$$
-\underbrace{
-\left\{
-\begin{aligned}
-\mathcal{R}_{\mathsf{x}}^{T}\mathcal{R}_{\mathsf{y}}
-    &=\mathcal{R}_{\mathsf{y}-\mathsf{x}},
-    &&\text{relative position},\\
-\mathcal{R}_{\mathsf{0}}&=I,
-    &&\text{identity},\\
-\mathcal{R}_{\mathsf{x}}\mathcal{R}_{\mathsf{y}}
-    &=\mathcal{R}_{\mathsf{x}+\mathsf{y}}
-     =\mathcal{R}_{\mathsf{y}}\mathcal{R}_{\mathsf{x}},
-    &&\text{closure and commutativity},
-\end{aligned}
-\right.
-}_{\text{additive position structure required by RoPE}}
-\qquad
-\underbrace{
-\left\{
-\begin{aligned}
-\mathcal{R}_{\mathsf{x}}^{T}\mathcal{R}_{\mathsf{x}}&=I,
-    &&\text{orthogonality},\\
-\mathcal{R}_{\mathsf{x}}^{-1}&=\mathcal{R}_{\mathsf{x}}^{T},
-    &&\text{inverse},\\
-\|\mathcal{R}_{\mathsf{x}}v\|_2&=\|v\|_2,
-    &&\text{length preservation}
-\end{aligned}
-\right.
-}_{\text{provided by orthogonal transformations}}
-$$
+### The relative-position law
 
-The relative-position requirement follows from these properties:
-$$
-\mathcal{R}_{\mathsf{x}}^{T}\mathcal{R}_{\mathsf{y}}
-=\mathcal{R}_{-\mathsf{x}}\mathcal{R}_{\mathsf{y}}
-=\mathcal{R}_{\mathsf{y}-\mathsf{x}}.
-$$
-Consequently, the attention score depends only on the displacement $\mathsf{y}-\mathsf{x}$:
-$$
-(\mathcal{R}_{\mathsf{x}}q)^{T}(\mathcal{R}_{\mathsf{y}}k)
-=q^{T}\mathcal{R}_{\mathsf{x}}^{T}\mathcal{R}_{\mathsf{y}}k
-=q^{T}\mathcal{R}_{\mathsf{y}-\mathsf{x}}k.
-$$
-Vector positions do not change these equations: $\mathsf{x}+\mathsf{y}$ and $\mathsf{y}-\mathsf{x}$ are now vector operations in $\mathbb{R}^p$. What changes is the map from a position to a matrix. For ordinary planar RoPE, $p=1$ and $\mathcal{R}_{\mathsf{x}}=e^{\mathsf{x}J}$, where $J$ is a fixed planar-rotation generator. For multidimensional RoPE, $\mathcal{R}_{\mathsf{x}}$ must combine rotations associated with the different position coordinates while preserving the additive law.
+Standard RoPE rotates each pair of query and key features through an angle $\omega x$. Here $x\in\mathbb{R}$ is the scalar position and $\omega\in\mathbb{R}$ is the frequency assigned to that pair. The full encoding matrix arranges these rotations in diagonal blocks, as in [Su's original derivation of RoPE](https://kexue.fm/archives/8265).
 
-### Generators and the exponential map
+Let $\mathcal{R}_x\in\mathbb{R}^{n\times n}$ be an orthogonal encoding matrix at position $x$. Orthogonality gives $\mathcal{R}_x^T\mathcal{R}_x=I_n$, where $I_n$ is the $n\times n$ identity, so the encoding preserves vector lengths. For query and key column vectors $q,k\in\mathbb{R}^n$ at scalar positions $x,y\in\mathbb{R}$, their encoded dot product is the scalar
+$$
+(\mathcal{R}_xq)^T(\mathcal{R}_yk)=q^T\mathcal{R}_x^T\mathcal{R}_yk.
+$$
+We recover the relative-position behavior of RoPE by requiring
+$$
+\mathcal{R}_x^T\mathcal{R}_y=\mathcal{R}_{y-x}.
+$$
+Setting $y=x$ gives $\mathcal{R}_0=I_n$. To obtain the addition law, take a scalar step $\delta\in\mathbb{R}$, set $y=x+\delta$, and multiply on the left by $\mathcal{R}_x$. This gives $\mathcal{R}_{x+\delta}=\mathcal{R}_x\mathcal{R}_\delta$. Conversely, given the addition law and $\mathcal{R}_0=I_n$, we have
+$$
+\mathcal{R}_{-x}=\mathcal{R}_x^{-1}=\mathcal{R}_x^T,\qquad
+\mathcal{R}_x^T\mathcal{R}_y=\mathcal{R}_{-x}\mathcal{R}_y=\mathcal{R}_{y-x}.
+$$
+Each block of standard RoPE satisfies the addition law because applying two planar rotations adds their angles, and $\omega(x+\delta)=\omega x+\omega\delta$.
 
-Start with an arbitrary complex number $z=u+iv$, rather than a special coordinate point. The key calculus observation is that multiplication by $i$ is perpendicular to $z$:
+### The group of orthogonal transformations
+
+The real $n\times n$ orthogonal matrices form the group $O(n)$ under multiplication. Its identity is $I_n$. For $R\in O(n)$, the inverse is $R^T$, and $R^TR=I_n$ gives $\det R=\pm1$. The determinant-$+1$ component is the rotation subgroup $SO(n)$. The determinant-$-1$ component consists of orientation-reversing transformations. Composing two such transformations gives determinant $+1$ and lands back in $SO(n)$.
+
+Every eigenvalue $\lambda\in\mathbb{C}$ of a real orthogonal matrix $R$ has modulus one. A nonreal eigenvalue and its conjugate contribute $\lambda\overline{\lambda}=1$ to the determinant. The only possible real eigenvalues are $+1$ and $-1$, so $\det R=(-1)^{r_-}$, where $r_-$ counts the eigenvalues equal to $-1$, with multiplicity. An even count puts $R$ in $SO(n)$, and an odd count puts it in the orientation-reversing component of $O(n)$.
+
+In the plane, $\operatorname{diag}(-1,1)$ reflects across the second coordinate axis and has determinant $-1$. The half-turn $\operatorname{diag}(-1,-1)$ reverses both coordinates. As the rotation angle goes from zero to $\pi$, the eigenvalues move around the unit circle as a conjugate pair and arrive at $-1$ together, with product $+1$ throughout.
+
+For RoPE, the smooth family starts at $\mathcal{R}_0=I_n$, where the determinant is $+1$. Since $\det\mathcal{R}_x$ is continuous in $x$ and takes values in $\{+1,-1\}$, every encoding matrix $\mathcal{R}_x$ has determinant $+1$ and belongs to $SO(n)$.
+
+With the addition law, $\mathcal{R}:(\mathbb{R},+)\to SO(n)$ is a group homomorphism.
+
+The Lie algebra describes the infinitesimal rotations at the identity. Let $Q(t)\in SO(n)$ be a smooth matrix curve with real parameter $t$ and $Q(0)=I_n$. Its derivative at the identity is the matrix $J=Q'(0)\in\mathbb{R}^{n\times n}$. Differentiating orthogonality at zero gives
 $$
-iz=i(u+iv)=-v+iu,
-\qquad
-\langle z,iz\rangle
-=\operatorname{Re}(\overline{z}\,iz)
-=\operatorname{Re}(i|z|^2)=0.
-$$
-If $z$ moves along a circle centered at the origin, $iz$ is precisely its instantaneous direction of motion. This suggests viewing $i$ not as a matrix entry pattern, but as the **generator of a flow**:
-$$
-\frac{dz(\theta)}{d\theta}=i\,z(\theta),
-\qquad z(0)=z_0
+Q(t)^TQ(t)=I_n
 \quad\Longrightarrow\quad
-z(\theta)=e^{i\theta}z_0.
+J^T+J=0.
 $$
-The differential equation contains the local generator $i$; its solution contains the finite motion $e^{i\theta}$. Writing $z_0=u_0+iv_0$, Euler's formula gives
-$$
-z(\theta)
-=(\cos\theta+i\sin\theta)(u_0+iv_0)
-=(u_0\cos\theta-v_0\sin\theta)
-+i(u_0\sin\theta+v_0\cos\theta).
-$$
-This is exactly the RoPE picture: the phase $e^{i\theta}$ is a point on the unit circle, but $z_0\mapsto e^{i\theta}z_0$ is an **action** on a query or key vector.
+The real skew-symmetric matrices form $\mathfrak{so}(n)$, the Lie algebra of $SO(n)$. A curve in $O(n)$ through $I_n$ also stays in $SO(n)$ near $I$, so the two groups have the same Lie algebra. In the plane, every skew-symmetric matrix is a scalar multiple of one generator.
 
-To express the same action on real coordinates, identify $z=u+iv$ with the vector $ue_u+ve_v$. Multiplication by $i$ becomes the linear operator $K$ defined by
+### The exponential map in the plane
+
+For an angle $\theta\in\mathbb{R}$, the planar rotation $R_\theta\in SO(2)$ is a $2\times2$ matrix. Its derivative at $\theta=0$ gives the generator matrix $K\in\mathbb{R}^{2\times2}$.
 $$
-z=u+iv\longleftrightarrow ue_u+ve_v,
+R_\theta=
+\begin{pmatrix}
+\cos\theta & -\sin\theta\\
+\sin\theta & \cos\theta
+\end{pmatrix},
 \qquad
-K(ue_u+ve_v)=-ve_u+ue_v.
+K=\left.\frac{d R_\theta}{d\theta}\right|_{\theta=0}
+=\begin{pmatrix}
+0 & -1\\
+1 & 0
+\end{pmatrix}.
 $$
-In basis notation,
+For any real increment $h$, the addition law $R_{\theta+h}=R_hR_\theta$ determines the derivative everywhere. Differentiate with respect to $h$ at zero to get
 $$
-K=e_u\otimes e_v^T-e_v\otimes e_u^T,
+\frac{dR_\theta}{d\theta}=KR_\theta,
 \qquad
-Ke_u=e_v,\qquad Ke_v=-e_u.
-$$
-Thus $K$ is simply the real version of multiplication by $i$: it takes the $v$-component into the $u$-direction with a minus sign, and the $u$-component into the $v$-direction. Moreover,
-$$
-K^T=-K,\qquad K^2=-I,
-$$
-so $K$ has the same algebraic rule as $i^2=-1$. The real flow corresponding to $z'=iz$ is therefore
-$$
-\frac{d\mathcal{R}_{\theta}}{d\theta}
-=K\mathcal{R}_{\theta},
-\qquad
-\mathcal{R}_0=I
+R_0=I_2
 \quad\Longrightarrow\quad
-\mathcal{R}_{\theta}=e^{\theta K}.
+R_\theta=e^{\theta K}.
 $$
-Expanding the exponential gives the matrix form of Euler's formula:
-$$
-\begin{aligned}
-e^{\theta K}
-&=I+\theta K+\frac{\theta^2K^2}{2!}+\frac{\theta^3K^3}{3!}+\cdots\\
-&=\left(1-\frac{\theta^2}{2!}+\cdots\right)I
- +\left(\theta-\frac{\theta^3}{3!}+\cdots\right)K\\
-&=(\cos\theta)I+(\sin\theta)K.
-\end{aligned}
-$$
-Applying this operator to $u_0e_u+v_0e_v$ recovers the real and imaginary parts of $e^{i\theta}z_0$ exactly. Differentiating at the identity recovers the generator, and the exponential supplies the additive law required by scalar-position RoPE:
-$$
-\left.\frac{d}{d\theta}e^{\theta K}\right|_{\theta=0}=K,
-\qquad
-e^{\theta K}e^{\phi K}=e^{(\theta+\phi)K}.
-$$
+Since $K^2=-I_2$, the even and odd terms of the exponential series give $e^{\theta K}=(\cos\theta)I_2+(\sin\theta)K$. Identifying a planar vector with a complex scalar $z\in\mathbb{C}$ makes $K$ act as multiplication by $i$, so the same rotation is $z\mapsto e^{i\theta}z=(\cos\theta+i\sin\theta)z$.
 
-Why must the higher-dimensional generator be an $n\times n$ matrix rather than an $n$-dimensional vector? Because the scalar $\theta$ controls a **parameter** of the transformation, not the number of entries in the object being transformed. A rotation must act linearly on every $q,k\in\mathbb{R}^n$, so its matrix belongs to $\mathbb{R}^{n\times n}$. The generator describes how that matrix changes infinitesimally:
-$$
-\mathcal{R}_{\theta}=I+\theta J+O(\theta^2)
-\quad\Longrightarrow\quad
-J\in\mathbb{R}^{n\times n},
-\qquad
-\mathcal{R}_{\theta}v=v+\theta Jv+O(\theta^2).
-$$
-An $n$-dimensional vector can specify an initial state or an axis in $\mathbb{R}^3$, but it cannot, by itself, specify the linear transformation applied to every other vector.
+A planar RoPE block with frequency $\omega$ uses $\theta=\omega x$, so its encoding at position $x$ is $e^{x(\omega K)}$.
 
-Matrix form also makes composition possible: $J_iJ_j$ represents applying one infinitesimal transformation after another. The commutator $[J_i,J_j]=J_iJ_j-J_jJ_i$ measures whether the two orders differ; no analogous multiplication is built into ordinary vectors in $\mathbb{R}^n$.
-
-There is a separate counting argument. For $i<j$, define the generator of the coordinate plane $(i,j)$ by
-$$
-J_{ij}=\begin{cases}
--1,&\text{entry }(i,j),\\
-+1,&\text{entry }(j,i),\\
-0,&\text{otherwise}.
-\end{cases}
-$$
-The opposite signs in the transposed entries make $J_{ij}^T=-J_{ij}$, so each matrix generates rotation in one coordinate plane. These planes account for every independent infinitesimal rotation. Hence
-$$
-\dim\mathfrak{so}(n)=\binom{n}{2}=\frac{n(n-1)}{2},
-$$
-which generally exceeds $n$. A single $n$-dimensional vector cannot hold all these independent rotational directions. For example, $\mathfrak{so}(3)$ happens to be three-dimensional, which permits an axis-vector parametrization, but $\mathfrak{so}(4)$ is six-dimensional.
-
-This construction extends to other matrix Lie groups: smooth groups whose multiplication and inversion are smooth. The associated **Lie algebra** $\mathfrak{g}$ collects the possible generators, obtained by differentiating group curves $\gamma(t)$ at $\gamma(0)=I$:
-$$
-X=\dot\gamma(0)\in\mathfrak{g},
-\qquad
-\exp:\mathfrak{g}\to G,\qquad X\mapsto e^X.
-$$
-
-For real RoPE, the entire relationship can be summarized by
-$$
-\operatorname{im}\mathcal R\subset SO(n)\subset O(n).
-$$
-The orthogonal group $O(n)$ consists of matrices satisfying $R^TR=I$, which already gives the length preservation we need. The determinant then selects the rotation subgroup $SO(n)$, while the additive position law selects the RoPE family inside it. Orthogonality implies
-$$
-1=\det(R^TR)=(\det R)^2
-\quad\Longrightarrow\quad
-\det R=\pm1.
-$$
-Thus $O(n)$ contains both rotations ($\det R=1$) and reflections ($\det R=-1$). Selecting $\det R=1$ gives $SO(n)$. In particular, our planar generator satisfies $K^2=-I$. Therefore
-$$
-0=\det(-K^2)=\det(-I_2)\det(K^2)=(\det K)^2,
-$$
-and $K$ is invertible because $K(-K)=I$. Since $\det K$ is real and nonzero, $\det K=1$. Hence $K$ is a quarter-turn, not a reflection. The determinant alone, however, does not imply orthogonality: $\det R=1$ describes the larger group $SL(n,\mathbb{R})$, which also contains non-orthogonal matrices.
-
-To find the generators, differentiate a curve $\gamma(t)$ in $O(n)$ with $\gamma(0)=I$:
-$$
-\gamma(t)^T\gamma(t)=I
-\quad\Longrightarrow\quad
-X^T+X=0
-\quad\text{at }t=0.
-$$
-Therefore
-$$
-\mathfrak{so}(n)=\{X\in\mathbb{R}^{n\times n}:X^T=-X\}.
-$$
-Since $SO(n)$ merely selects the component of $O(n)$ containing $I$, it has the same Lie algebra. Conversely, a skew-symmetric $X$ produces
-$$
-(e^X)^Te^X=e^{X^T}e^X=e^{-X}e^X=I,
-\qquad
-\det e^X=e^{\operatorname{tr}X}=1.
-$$
-Hence exponentials generate rotations, never reflections. For RoPE, this is exactly the required bridge: skew-symmetric generators live in $\mathfrak{so}(n)$, their exponentials live in $SO(n)$, and the position-addition law chooses a commutative family within that rotation group.
-
-### Returning to vector-position RoPE
-
-We now seek a smooth map $\mathcal{R}:\mathbb{R}^p\to SO(n)$ that turns vector addition into matrix multiplication:
-$$
-\mathcal{R}_{\mathsf{x}}\mathcal{R}_{\mathsf{y}}
-=\mathcal{R}_{\mathsf{x}+\mathsf{y}},
-\qquad
-\mathcal{R}_{\mathsf{0}}=I.
-$$
-This is a group homomorphism from the additive position group $(\mathbb{R}^p,+)$ to $SO(n)$; it need not be injective because rotations are periodic. Its image is commutative even though $SO(n)$ itself is generally noncommutative for $n\geq3$.
-
-Introduce one generator for each position coordinate:
-$$
-J_i=\left.\frac{\partial\mathcal{R}_{\mathsf{x}}}{\partial x_i}\right|_{\mathsf{x}=\mathsf{0}}
-\in\mathfrak{so}(n),
-\qquad i=1,\ldots,p.
-$$
-Since $\mathcal{R}_{\mathsf{x}}^{-1}=\mathcal{R}_{-\mathsf{x}}=\mathcal{R}_{\mathsf{x}}^T$, orthogonality also guarantees the relative-position form. Differentiating
-$$
-\mathcal{R}_{\mathsf{x}+t\mathsf{y}}
-=\mathcal{R}_{\mathsf{x}}\mathcal{R}_{t\mathsf{y}}
-$$
-at $t=0$ and multiplying on the left by $\mathcal{R}_{\mathsf{x}}^T$ gives
-$$
-\mathcal{R}_{\mathsf{x}}^T\frac{d}{dt}\mathcal{R}_{\mathsf{x}+t\mathsf{y}}
-=\sum_{i=1}^{p}y_iJ_i.
-$$
-Commuting the position order therefore requires $[J_i,J_j]=J_iJ_j-J_jJ_i=0$. The generators are simultaneously orthogonally block-diagonalizable into $2\times2$ rotation blocks, possibly with a $1\times1$ zero block. Writing $\theta_k(\mathsf{x})=\sum_i x_i\omega_{ki}$, we obtain
-$$
-\mathcal{R}_{\mathsf{x}}
-=\exp\!\left(\sum_{i=1}^{p}x_iJ_i\right)
-=P\,\operatorname{diag}\!\left(
-e^{\theta_1(\mathsf{x})K},\ldots,
-e^{\theta_{\lfloor n/2\rfloor}(\mathsf{x})K},[1]
-\right)P^T,
-$$
-where $K=e_u\otimes e_v^T-e_v\otimes e_u^T$ is the planar generator introduced above, $P\in O(n)$, and $[1]$ occurs only when $n$ is odd. Hence there are at most $\lfloor n/2\rfloor$ independent rotational frequencies. In the language of the opening, $p$ counts the position coordinates used to parameterize these frequencies, whereas $n$ is the dimension of the vectors being rotated.
-
-The derivative at the identity already forces each $J_i$ to be skew-symmetric. Conversely, exponentials of commuting skew-symmetric generators produce rotations: for $A_i=x_iJ_i$,
-$$
-\mathcal{R}_{\mathsf{x}}^T\mathcal{R}_{\mathsf{x}}
-=e^{-A_1-\cdots-A_p}e^{A_1+\cdots+A_p}=I,
-\qquad
-\det\mathcal{R}_{\mathsf{x}}
-=e^{\operatorname{tr}(A_1+\cdots+A_p)}=1.
-$$
-The problem is now reduced to constructing these commuting skew-symmetric generators and determining how many independent position coordinates they can support.
-
-{% collapse Aside: quantum evolution and RoPE in bra-ket notation %}
-For the complex analogue, replace the real transpose by the conjugate transpose $U^*$:
+{% collapse "Quantum evolution and RoPE in bra-ket notation" %}
+For a complex matrix $W\in\mathbb{C}^{n\times n}$, the adjoint $W^*$ is its conjugate transpose.
 $$
 SU(n)\subset U(n),
 \qquad
-U(n)=\{U:U^*U=I\},
+U(n)=\{W\in\mathbb{C}^{n\times n}:W^*W=I_n\},
 \qquad
-SU(n)=\{U\in U(n):\det U=1\}.
+SU(n)=\{W\in U(n):\det W=1\}.
 $$
-Their generators are anti-Hermitian, with trace zero in the special unitary case:
+The generator $Z\in\mathbb{C}^{n\times n}$ is anti-Hermitian. Special unitary generators also have trace zero.
 $$
-\mathfrak{u}(n)=\{Z:Z^*=-Z\},
+\mathfrak{u}(n)=\{Z\in\mathbb{C}^{n\times n}:Z^*=-Z\},
 \qquad
-\mathfrak{su}(n)=\{Z:Z^*=-Z,\ \operatorname{tr}Z=0\}.
+\mathfrak{su}(n)=\{Z\in\mathfrak{u}(n):\operatorname{tr}Z=0\}.
 $$
-Unlike $O(n)$ and $SO(n)$, these groups do not share a Lie algebra: $\det e^Z=e^{\operatorname{tr}Z}$, so $\det U=1$ imposes an additional trace constraint on the generator.
+The identity $\det(e^{tZ})=e^{t\operatorname{tr}Z}$ gives the trace constraint for $\mathfrak{su}(n)$. The determinant stays at $1$ for all $t$ exactly when $\operatorname{tr}Z=0$.
 
-The exponential map also appears in quantum mechanics, with a factor of $i$ that converts a Hermitian observable into an anti-Hermitian generator. For an $n$-dimensional system with a time-independent Hamiltonian $H=H^*$, the Schrödinger equation and its solution are
+The exponential map also appears in quantum mechanics, with a factor of $i$ that converts a Hermitian observable into an anti-Hermitian generator. Let $H\in\mathbb{C}^{n\times n}$ be the time-independent Hermitian Hamiltonian and $\hbar>0$ the reduced Planck constant. At time $t\in\mathbb{R}$, the state ket $\lvert\psi(t)\rangle\in\mathbb{C}^n$ is a column vector, and $U_t\in U(n)$ is its time-evolution matrix. The Schrödinger equation and its solution are
 $$
 i\hbar\frac{d}{dt}\lvert\psi(t)\rangle
 =H\lvert\psi(t)\rangle,
 \qquad
-\lvert\psi(t)\rangle=U(t)\lvert\psi(0)\rangle,
+\lvert\psi(t)\rangle=U_t\lvert\psi(0)\rangle,
 \qquad
-U(t)=e^{-itH/\hbar}.
+U_t=e^{-itH/\hbar}.
 $$
-The **unitary time-evolution operator** $U(t)$ has generator $-iH/\hbar\in\mathfrak{u}(n)$. Unitarity and the additive evolution law follow immediately:
+The generator of $U_t$ is $-iH/\hbar\in\mathfrak{u}(n)$. For real time increments $t,s$, the evolution matrices are unitary and compose by adding the increments.
 $$
-U(t)^*U(t)=e^{itH/\hbar}e^{-itH/\hbar}=I,
+U_t^*U_t=e^{itH/\hbar}e^{-itH/\hbar}=I_n,
 \qquad
-U(t)U(s)=U(t+s).
+U_tU_s=U_{t+s}.
 $$
 Its determinant need not equal $1$:
 $$
-\det U(t)=e^{-it\operatorname{tr}(H)/\hbar}.
+\det U_t=e^{-it\operatorname{tr}(H)/\hbar}.
 $$
-Imposing $\operatorname{tr}H=0$ makes the evolution special unitary for all $t$; at one particular time, $\operatorname{tr}H\in(2\pi\hbar/t)\mathbb{Z}$ suffices. Thus real rotations use $e^{\theta J}$ with $J^T=-J$, whereas quantum evolution uses $e^{-itH/\hbar}$ with $H^*=H$.
+Imposing $\operatorname{tr}H=0$ makes the evolution special unitary for all $t$; at a particular time $t\ne0$, $\operatorname{tr}H\in(2\pi\hbar/t)\mathbb{Z}$ suffices. Thus real rotations use $e^{\theta J}$ with $J^T=-J$, whereas quantum evolution uses $e^{-itH/\hbar}$ with $H^*=H$.
 
-Bra-ket notation also provides a compact way to write RoPE. Regard $q$ and $k$ as kets $\lvert q\rangle$ and $\lvert k\rangle$, so positional encoding becomes
+Bra-ket notation also provides a compact way to write RoPE. A ket $\lvert v\rangle\in\mathbb{C}^n$ is a column vector, and its bra $\langle v\rvert$ is the conjugate-transpose row vector. Write the encoded query and key as kets
 $$
-\lvert q_{\mathsf{x}}\rangle
-=\mathcal{R}_{\mathsf{x}}\lvert q\rangle,
+\lvert q_{x}\rangle
+=\mathcal{R}_{x}\lvert q\rangle,
 \qquad
-\lvert k_{\mathsf{y}}\rangle
-=\mathcal{R}_{\mathsf{y}}\lvert k\rangle.
+\lvert k_{y}\rangle
+=\mathcal{R}_{y}\lvert k\rangle.
 $$
 The bra of an encoded query is obtained from its adjoint. For real vectors, the adjoint is the transpose, so
 $$
-\langle q_{\mathsf{x}}\rvert
-=\langle q\rvert\mathcal{R}_{\mathsf{x}}^T
-=\langle q\rvert\mathcal{R}_{-\mathsf{x}},
+\langle q_{x}\rvert
+=\langle q\rvert\mathcal{R}_{x}^T
+=\langle q\rvert\mathcal{R}_{-x},
 $$
-where orthogonality supplies the last equality. The unnormalized attention score is therefore
+where orthogonality and the addition law give the last equality. The unnormalized attention score is therefore
 $$
-\langle q_{\mathsf{x}}\mid k_{\mathsf{y}}\rangle
-=\langle q\rvert\mathcal{R}_{\mathsf{y}-\mathsf{x}}\lvert k\rangle.
+\langle q_{x}\mid k_{y}\rangle
+=\langle q\rvert\mathcal{R}_{y-x}\lvert k\rangle.
 $$
-Using the rotation basis $P^T\lvert q\rangle$ and $P^T\lvert k\rangle$ from above, we can expose the frequencies explicitly:
-$$
-\langle q_{\mathsf{x}}\mid k_{\mathsf{y}}\rangle
-=\langle q\rvert P
-\exp\!\left(\sum_{\ell=1}^{\lfloor n/2\rfloor}
-\theta_{\ell}(\mathsf{y}-\mathsf{x})K_{\ell}\right)
-P^T\lvert k\rangle.
-$$
-Here $K_{\ell}$ is the planar generator in the $\ell$th rotation block, and $\theta_{\ell}(\mathsf{z})=\sum_i z_i\omega_{\ell i}$. This is only a change of notation for ordinary RoPE; no quantum dynamics is implied.
+For a planar RoPE block with frequency $\omega$, the operator inside this overlap is $e^{(y-x)\omega K}$. The displacement multiplies the rotation generator $\omega K$ in the exponent, just as elapsed time multiplies the generator in $U_t$.
 {% endcollapse %}
 
+## Generalizing RoPE to vector positions
 
+### Trying two quaternion phases
+
+Write a two-dimensional position as $(\xi,\eta)\in\mathbb{R}^2$, with real coordinates $\xi$ and $\eta$. Let $\mathbf{i},\mathbf{j},\mathbf{k}$ be the imaginary basis units of the quaternions $\mathbb{H}$. The planar phase $e^{i\theta}$ suggests the unit-quaternion phase $\rho(\xi,\eta)=e^{\xi\mathbf{i}+\eta\mathbf{j}}\in\mathbb{H}$ considered in [Su's derivation of 2D RoPE](https://kexue.fm/archives/8397).
+
+Left multiplication by this unit quaternion preserves length in the four real components, so it acts on the feature vector as an orthogonal $4\times4$ matrix. The question is whether these transformations compose according to position addition.
+
+The steps $(\xi,0)$ and $(0,\eta)$ add to the same position in either order. For the quaternion encoding to preserve relative positions, both products would have to give $\rho(\xi,\eta)$. But $\mathbf{i}\mathbf{j}=\mathbf{k}$ and $\mathbf{j}\mathbf{i}=-\mathbf{k}$, so
+$$
+e^{\xi\mathbf{i}}e^{\eta\mathbf{j}}-e^{\eta\mathbf{j}}e^{\xi\mathbf{i}}
+=2\sin\xi\sin\eta\,\mathbf{k}.
+$$
+For general $\xi$ and $\eta$, the order changes the result, so the encoding fails the relative-position law.
+
+This also limits any smooth encoding that composes by multiplying unit quaternions. At the identity, its coordinate generators are pure imaginary because differentiating $\rho\overline{\rho}=1$ gives $a+\bar a=0$. For two pure imaginary quaternion generators $a,b\in\mathbb{H}$, the difference between the two orders is governed by $ab-ba=2a\times b$, where the cross product identifies $a$ and $b$ with their vectors in $\mathbb{R}^3$. The cross product vanishes only when the generators are linearly dependent. All the coordinate generators therefore lie along one imaginary axis, giving at most one independent direction.
+
+### Axial RoPE
+
+Four real features already give us room for two separate planar rotations. Let the scalar coordinate $\xi$ rotate the first pair of features and $\eta$ the second. This gives the encoding matrix $\mathcal{R}_{(\xi,\eta)}\in SO(4)$
+$$
+\mathcal{R}_{(\xi,\eta)}
+=\operatorname{diag}\!\left(e^{\xi K},e^{\eta K}\right).
+$$
+A step in $\xi$ acts only on the first pair, and a step in $\eta$ acts only on the second, so their order makes no difference. Within each plane, angles add as in standard RoPE.
+
+Axial RoPE assigns each feature pair to one position axis, with a frequency for that pair. Qwen2-VL's multimodal RoPE (M-RoPE) uses this idea for time, height, and width.[^1] Qwen3-VL interleaves the axis assignments across frequency bands, with each rotary pair still using one coordinate.[^2]
+
+### Composing infinitesimal rotations
+
+In the planar case, the infinitesimal rotation at the identity determined the whole family $R_\theta$. That is also how a fixed generator determines quantum time evolution. For a vector position, we have one such derivative for each coordinate. Can these derivatives determine an encoding that composes correctly even when several coordinates change at once?
+
+Let $\mathsf{x}=(x_1,\ldots,x_p)\in\mathbb{R}^p$ be a position vector, with scalar coordinates $x_i\in\mathbb{R}$. Its encoding $\mathcal{R}_{\mathsf{x}}\in SO(n)$ acts on the $n$-dimensional feature vectors. Write $e_i\in\mathbb{R}^p$ for the $i$th coordinate basis vector, and take real step sizes $t$ and $h$. Differentiating $\mathcal{R}_{(t+h)e_i}=\mathcal{R}_{he_i}\mathcal{R}_{te_i}$ in $h$ at zero gives
+$$
+\frac{d}{dt}\mathcal{R}_{te_i}=J_i\mathcal{R}_{te_i},
+\qquad
+J_i=\left.\frac{d}{dt}\mathcal{R}_{te_i}\right|_{t=0}\in\mathfrak{so}(n).
+$$
+With $\mathcal{R}_{\mathsf{0}}=I_n$, this yields $\mathcal{R}_{te_i}=e^{tJ_i}$. The coordinate steps $te_i$ and $se_j$, with $t,s\in\mathbb{R}$, sum to the same displacement in either order. Their rotations therefore satisfy
+$$
+e^{tJ_i}e^{sJ_j}=e^{sJ_j}e^{tJ_i}.
+$$
+Differentiating once in $t$ and once in $s$ at $(0,0)$ gives $[J_i,J_j]=J_iJ_j-J_jJ_i=0$. This is the condition on the generators imposed by the composition law. Applying that law to $\mathsf{x}=\sum_i x_i e_i$ reconstructs the full encoding.
+$$
+\mathcal{R}_{\mathsf{x}}
+=\prod_{i=1}^{p}e^{x_iJ_i}
+=\exp\!\left(\sum_{i=1}^{p}x_iJ_i\right).
+$$
+Conversely, pairwise commuting skew-symmetric generators give an orthogonal encoding with the required composition law. For the matrix $A=\sum_i x_iJ_i\in\mathfrak{so}(n)$, skew-symmetry gives $(e^A)^Te^A=e^{-A}e^A=I_n$. Since any two such exponents commute, their exponentials compose by adding the exponents.
+
+### How many independent directions can RoPE encode?
+
+For a single position coordinate, the planar rotation blocks follow from the decomposition of one skew-symmetric generator, as shown in [Su's completeness analysis of RoPE](https://kexue.fm/archives/9403).
+
+For vector positions, the condition $[J_i,J_j]=0$ forces all generators to share the same mutually orthogonal rotation planes. To see why, view the $J_i$ over $\mathbb{C}$. They are commuting normal matrices, so they have a common orthonormal eigenbasis. Their eigenvalues are purely imaginary and, because the matrices are real, every nonzero tuple of joint eigenvalues pairs with its complex conjugate. Choose an orthonormal basis for one joint eigenspace of each pair and take its conjugate basis for the other. The real and imaginary parts of each such eigenvector span one real plane where every $J_i$ acts as a scalar multiple of $K$. The common zero eigenspace supplies the directions fixed by all the rotations.
+
+Write $m=\lfloor n/2\rfloor$. Pair any spare fixed directions into planes with zero coefficients, leaving one fixed coordinate when $n$ is odd. Let $P\in O(n)$ be the orthogonal matrix whose columns give this basis, and let $\Omega=(\omega_{\ell i})\in\mathbb{R}^{m\times p}$ map the position vector to the vector of plane angles. Its entry $\omega_{\ell i}\in\mathbb{R}$ is the coefficient of $x_i$ in the scalar angle $\theta_\ell(\mathsf{x})\in\mathbb{R}$ of plane $\ell$. The encoding is
+$$
+\begin{aligned}
+\theta_\ell(\mathsf{x})&=\sum_{i=1}^{p}\omega_{\ell i}x_i,
+\qquad \ell=1,\ldots,m,\\
+\mathcal{R}_{\mathsf{x}}
+&=P\,\operatorname{diag}\!\left(
+e^{\theta_1(\mathsf{x})K},\ldots,
+e^{\theta_m(\mathsf{x})K},[1]
+\right)P^T,
+\end{aligned}
+$$
+where the final scalar block $[1]$ appears only when $n$ is odd.
+
+A displacement vector $\mathsf{v}\in\mathbb{R}^p$ leaves the encoding unchanged along the entire line $\mathsf{x}+t\mathsf{v}$, $t\in\mathbb{R}$, exactly when $\Omega\mathsf{v}=0$. Thus the number of independent position directions is $\operatorname{rank}\Omega\le m$.
+
+Assigning a separate plane to each of $m$ coordinates attains the bound. For axial RoPE, each row of $\Omega$ uses a single coordinate. The general form allows each plane to use a linear combination of the position coordinates in the shared rotation basis.
+
+[^1]: Peng Wang et al. (2024). [Qwen2-VL: Enhancing Vision-Language Model's Perception of the World at Any Resolution](https://arxiv.org/html/2409.12191). arXiv preprint.
+[^2]: Shuai Bai et al. (2025). [Qwen3-VL Technical Report](https://arxiv.org/html/2511.21631v1). arXiv preprint, §2.1.
