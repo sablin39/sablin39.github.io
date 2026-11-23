@@ -49,6 +49,8 @@ For RoPE, the smooth family starts at $\mathcal{R}_0=I_n$, where the determinant
 
 With the addition law, $\mathcal{R}:(\mathbb{R},+)\to SO(n)$ is a group homomorphism.
 
+![Continuous generators and their exponential maps into orthogonal and unitary groups.](group_algebra_mapping.png)
+
 <!-- Scene assets retained for later reuse. -->
 
 The Lie algebra describes the infinitesimal rotations at the identity. Let $Q(t)\in SO(n)$ be a smooth matrix curve with real parameter $t$ and $Q(0)=I_n$. Its derivative at the identity is the matrix $J=Q'(0)\in\mathbb{R}^{n\times n}$. Differentiating orthogonality at zero gives
@@ -247,6 +249,8 @@ It is this vanishing commutator that lets the exponentials compose in either ord
 Axial RoPE assigns each feature pair to one position axis, with a frequency for that pair. Qwen2-VL's multimodal RoPE (M-RoPE) uses this idea for time, height, and width.[^1] Qwen3-VL interleaves the axis assignments across frequency bands, with each rotary pair still using one coordinate.[^2] Cosmos 3 likewise divides the rotary channels of each attention head among temporal, height, and width coordinates. [^3]
 
 This coordinate-aligned construction is only one way to satisfy the commuting-generator condition. The next step is to isolate that condition and derive the general encoding without requiring the feature planes to align with coordinate axes.
+
+![Rotations in SO(n) and the determinant-minus-one component of O(n).](transition_mapping.png)
 
 ### Composing infinitesimal rotations
 
