@@ -54,21 +54,5 @@ hexo.extend.filter.register('marked:extensions', extensions => {
       if (asset) token.href = asset.slug;
       return false;
     }
-  }, {
-    name: 'html',
-    renderer(token) {
-      // Typora also writes HTML images when an image has custom sizing.
-      const source = /^(\s*<img\b(?:[^"'<>]|"[^"]*"|'[^']*')*?\s+src\s*=\s*)(["'])(.*?)\2/i;
-      token.text = token.text.replace(source, (attribute, prefix, quote, href) => {
-        const options = this.parser.options;
-        const asset = findEditorAsset(options, href);
-        if (!asset) return attribute;
-
-        const hexo = options.hexo;
-        const url = hexo.extend.helper.get('url_for').call(hexo, asset.path);
-        return `${prefix}"${url.replaceAll('&', '&amp;').replaceAll('"', '&quot;')}"`;
-      });
-      return false;
-    }
   });
 });

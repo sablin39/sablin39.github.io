@@ -1,6 +1,7 @@
 ---
 title: 'Why Orthogonal RoPE Supports at Most $\lfloor n/2 \rfloor$ Independent Position Directions'
 title_text: 'Why Orthogonal RoPE Supports at Most ⌊n/2⌋ Independent Position Directions'
+description: 'A derivation of orthogonal RoPE from relative-position composition: commuting generators, common rotation planes, and the bound on independent position directions.'
 comments: false
 toc: true
 donate: false
@@ -12,7 +13,7 @@ tags: [algebra,"lie group and lie algebra"]
 cover: se3.png
 ---
 
-In this blog post we proved that With $n$ features and $p$ position coordinates, nontrivial orthogonal RoPE supports between $1$ and $\min(p,\lfloor n/2\rfloor)$ independent position directions. After reviewing the relative-position law and matrix exponential, the post shows why quaternion rotations fail to compose, how axial RoPE restores commutativity, and why common rotation planes bound the Lie algebra rank by $\lfloor n/2\rfloor$.
+With $n$ features and $p$ position coordinates, nontrivial orthogonal RoPE supports between $1$ and $\min(p,\lfloor n/2\rfloor)$ independent position directions. We review the relative-position law and matrix exponential, show why quaternion rotations fail to compose and axial RoPE restores commutativity, then derive the bound through common rotation planes and Lie algebra rank.
 
 <!-- more -->
 
@@ -47,9 +48,12 @@ In the plane, $\operatorname{diag}(-1,1)$ reflects across the second coordinate 
 
 For RoPE, the smooth family starts at $\mathcal{R}_0=I_n$, where the determinant is $+1$. Since $\det\mathcal{R}_x$ is continuous in $x$ and takes values in $\{+1,-1\}$, every encoding matrix $\mathcal{R}_x$ has determinant $+1$ and belongs to $SO(n)$.
 
-With the addition law, $\mathcal{R}:(\mathbb{R},+)\to SO(n)$ is a group homomorphism.
+<figure class="post-figure">
+  {% asset_img transition_mapping.png "Rotations preserve the two determinant components of O(n), while left multiplication by a determinant-minus-one matrix exchanges them." %}
+  <figcaption class="text-center"><small>Left multiplication by a rotation preserves each determinant component of $O(n)$; a diagonal sign matrix with an odd number of negative entries exchanges them. Here $R=e^{tX}$ and $X$ are forward references to the exponential map and generators defined below.</small></figcaption>
+</figure>
 
-![Continuous generators and their exponential maps into orthogonal and unitary groups.](group_algebra_mapping.png)
+With the addition law, $\mathcal{R}:(\mathbb{R},+)\to SO(n)$ is a group homomorphism.
 
 <!-- Scene assets retained for later reuse. -->
 
@@ -159,6 +163,11 @@ $$
 For a planar RoPE block with frequency $\omega$, the operator inside this overlap is $e^{(y-x)\omega K}$. The displacement multiplies the rotation generator $\omega K$ in the exponent, just as elapsed time multiplies the generator in $U_t$.
 {% endcollapse %}
 
+<figure class="post-figure">
+  {% asset_img group_algebra_mapping.png "Overview of exponential maps from orthogonal and unitary Lie algebras to their groups." %}
+  <figcaption class="text-center"><small>The orthogonal rows summarize the main text; the unitary rows summarize the optional quantum analogy. In this overview, $X$ denotes a generator and $Q$ a group element; $D_s$ is a diagonal matrix with diagonal entries $s_i\in\{+1,-1\}$.</small></figcaption>
+</figure>
+
 ## Generalizing RoPE to vector positions
 
 ### Why a direct quaternion generalization fails
@@ -250,8 +259,6 @@ Axial RoPE assigns each feature pair to one position axis, with a frequency for 
 
 This coordinate-aligned construction is only one way to satisfy the commuting-generator condition. The next step is to isolate that condition and derive the general encoding without requiring the feature planes to align with coordinate axes.
 
-![Rotations in SO(n) and the determinant-minus-one component of O(n).](transition_mapping.png)
-
 ### Composing infinitesimal rotations
 
 In the planar case, the infinitesimal rotation at the identity determined the whole family $R_\theta$. A fixed generator also determines quantum time evolution, as noted in the optional section above. For a vector position, we have one such derivative for each coordinate. Can these derivatives determine an encoding that composes correctly even when several coordinates change at once?
@@ -291,21 +298,57 @@ If some coordinate generators are linearly dependent, their number $p$ need not 
 
 ### Common planes for commuting generators
 
-Let $\mathfrak a\subseteq\mathfrak{so}(n)$ be any abelian subalgebra of infinitesimal rotations. Every $A\in\mathfrak a$ is normal because $A^T=-A$. The [spectral theorem for normal matrices](https://ocw.mit.edu/courses/18-700-linear-algebra-fall-2013/resources/mit18_700f13_spctrl_thrm/) supplies a unitary eigenbasis for each individual matrix; the [commuting-matrix extension](https://en.wikipedia.org/wiki/Diagonalizable_matrix#Simultaneous_diagonalization) supplies a common orthonormal eigenbasis for the whole abelian subspace. To see the basic mechanism behind the extension, if $Av=\lambda v$, then for another $B\in\mathfrak a$,
-$$
-A(Bv)=B(Av)=\lambda(Bv),
-$$
-so $B$ preserves each eigenspace of $A$. The restriction to such a subspace is still a commuting normal family, so induction on the dimension gives a common orthonormal eigenbasis.
+Let $\mathfrak a\subseteq\mathfrak{so}(n)$ be any abelian subalgebra of infinitesimal rotations. We derive its real rotation planes by induction on dimension, using complex coordinates only to find one invariant plane at a time. No diagonalizability or simultaneous-diagonalization theorem is assumed.
 
-Write the eigenvalues of $A$ as $\lambda_j(A)$. Since $A$ is real and skew-symmetric, its eigenvalues are purely imaginary and occur in conjugate pairs. The abelian subspace $\mathfrak a$ is also closed under complex conjugation, so its joint eigenspaces can be grouped into conjugate pairs. Order the common orthonormal eigenspaces into these pairs, using the common kernel for any remaining directions. With $m=\lfloor n/2\rfloor$, every $A\in\mathfrak a$ then has the form
+Every complex square matrix has an eigenvalue because its characteristic polynomial has a complex root by the [Fundamental Theorem of Algebra](https://en.wikipedia.org/wiki/Fundamental_theorem_of_algebra). For $B\in\mathfrak a$, if $Bz=\lambda z$ with $z\ne0$, skew-symmetry gives
 $$
-U^*AU=
-\operatorname{diag}\!\left(
-i\theta_1(A),-i\theta_1(A),\ldots,
-i\theta_m(A),-i\theta_m(A),[0]
-\right),
+\lambda z^*z=z^*Bz=-(Bz)^*z=-\bar\lambda z^*z,
 $$
-where the final scalar block appears only when $n$ is odd, and each $\theta_\ell(A)$ is real.
+so $\lambda=i\theta$ for some real $\theta$. This uses only the definition of an eigenvalue, not an eigenbasis.
+
+A nonzero skew-symmetric matrix $A_1=(a_{ij})$ has a nonzero eigenvalue. Otherwise its characteristic polynomial would be $\lambda^n$. But the coefficient of $\lambda^{n-2}$ in $\det(\lambda I-A_1)$ is
+$$
+\sum_{i<j}a_{ij}^2>0,
+$$
+obtained by taking $\lambda$ from all but two diagonal entries and evaluating the remaining $2\times2$ minor. Since $a_{ji}=-a_{ij}$, that minor contributes $a_{ij}^2$.
+
+If $\mathfrak a=0$, every subspace is a common kernel, handled by the pairing step below. Otherwise, choose a finite basis $\{A_1,\ldots,A_r\}$ of $\mathfrak a$ with $A_1\ne0$. Start with a nonzero eigenvalue $i\theta_1$ of $A_1$ and its eigenspace. Each subsequent matrix preserves the nonzero joint eigenspace of the preceding matrices: if $Av=\lambda v$ and $AB=BA$, then
+$$
+A(Bv)=B(Av)=\lambda(Bv).
+$$
+Select an eigenvector of the next matrix within that invariant complex subspace. After at most $r$ restrictions, we obtain one nonzero vector $z$ such that
+$$
+Bz=i\theta(B)z\qquad\text{for every }B\in\mathfrak a,
+$$
+where each $\theta(B)$ is real. Linearity extends the eigenvalue relations from the basis to all of $\mathfrak a$. This constructs one common eigenvector without assuming a common eigenbasis.
+
+Write $z=u-iv$ with real vectors $u,v$. They are linearly independent because $\theta_1\ne0$ and
+$$
+au+bv=0
+\quad\Longrightarrow\quad
+0=A_1(au+bv)=\theta_1(av-bu)
+\quad\Longrightarrow\quad a=b=0.
+$$
+Thus $W=\operatorname{span}_{\mathbb R}\{u,v\}$ is two-dimensional. Separating real and imaginary parts in $Bz=i\theta(B)z$ gives
+$$
+Bu=\theta(B)v,\qquad Bv=-\theta(B)u,
+$$
+so $W$ is invariant under every $B\in\mathfrak a$. Choose any orthonormal basis of $W$ by Gram–Schmidt. Every restriction $B|_W$ is skew-symmetric, so its matrix in this basis has the form $\theta_W(B)K$ for some real coefficient $\theta_W(B)$.
+
+The orthogonal complement $W^\perp$ is also invariant under the whole family. If $x\in W^\perp$ and $w\in W$, then $Bw\in W$ and
+$$
+w^T(Bx)=-(Bw)^Tx=0.
+$$
+Repeat the argument on the restrictions to $W^\perp$: if every basis matrix vanishes there, that remaining subspace is a common kernel; otherwise choose a nonzero basis matrix and construct another invariant plane. Each step reduces the dimension by two. Finally, pair directions in the common kernel into zero-rotation planes, leaving at most one unpaired direction.
+
+The orthonormal bases of all these subspaces form the columns of an orthogonal matrix $P$. With $m=\lfloor n/2\rfloor$, the induction therefore proves the **common-plane decomposition**:
+$$
+A=P\,\operatorname{diag}\!\left(
+\theta_1(A)K,\ldots,\theta_m(A)K,[0]
+\right)P^T
+\qquad\text{for every }A\in\mathfrak a.
+$$
+The final scalar block appears only when $n$ is odd. Each coefficient $\theta_\ell(A)$ is real and linear in $A$ because its block varies linearly with $A$.
 
 This gives an immediate upper bound on the dimension of $\mathfrak a$. Define
 $$
@@ -316,28 +359,10 @@ $$
 \theta_1(A)&\cdots&\theta_m(A)
 \end{pmatrix}^{T}.
 $$
-The map $\Phi$ is linear because eigenvalues on a common eigenspace add under matrix addition, and it is injective because $\Phi(A)=0$ implies $U^*AU=0$, hence $A=0$. Therefore,
+The map $\Phi$ is linear, and it is injective because $\Phi(A)=0$ makes every block in the decomposition zero, hence $A=0$. Therefore,
 $$
 \dim\mathfrak a\le m.
 $$
-
-The same eigenvectors also supply the real rotation planes. Choose a unit eigenvector $z=u+iv$ and its conjugate $\bar z=u-iv$ from the common orthonormal basis. Their orthogonality gives
-$$
-0=z^*\bar z
-=u^Tu-v^Tv+2iu^Tv,
-$$
-so $u^Tv=0$ and $\|u\|=\|v\|$. Since $\|z\|=1$, each of $u$ and $v$ has norm $1/\sqrt2$. Normalize them separately to obtain unit vectors $\hat u=\sqrt2\,u$ and $\hat v=\sqrt2\,v$, which are orthonormal. If $z$ satisfies $Az=i\theta z$, separating real and imaginary parts gives
-$$
-Au=-\theta v,\qquad Av=\theta u.
-$$
-Thus, in the ordered orthonormal basis $(\hat u,\hat v)$, $A$ acts as $\theta K$ on that plane. Applying this to every conjugate pair gives an orthogonal matrix $P$ and real linear functionals $\theta_\ell:\mathfrak a\to\mathbb R$ such that
-$$
-A=P\,\operatorname{diag}\!\left(
-\theta_1(A)K,\ldots,\theta_m(A)K,[0]
-\right)P^T
-\qquad\text{for every }A\in\mathfrak a.
-$$
-We call this result the **common-plane decomposition**. The supporting spectral and simultaneous-diagonalization results are linked above; the conversion from complex conjugate eigenspaces to real rotation planes is shown directly.
 
 <!-- Common-plane scene assets retained for later reuse. -->
 
