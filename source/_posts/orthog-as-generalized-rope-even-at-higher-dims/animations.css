@@ -10,40 +10,77 @@
   border-radius: 0.5rem;
 }
 
-.rope-scene-controls {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-top: 0.65rem;
+.rope-interactive {
+  padding: 0.25rem 0;
 }
 
-.rope-scene-play {
-  min-width: 4.6rem;
-  min-height: 2.75rem;
+.rope-slider {
+  display: grid;
+  grid-template-columns: minmax(7rem, auto) 1fr 3.5rem;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 0.6rem;
+  font-size: 0.95em;
+}
+
+.rope-slider input {
+  min-width: 0;
+  accent-color: #245fc5;
+}
+
+.rope-slider-value {
+  font-variant-numeric: tabular-nums;
+  color: #52617a;
+  text-align: right;
+}
+
+.rope-example-toggle,
+.rope-slot-controls button {
+  min-height: 2.5rem;
   padding: 0.35rem 0.7rem;
   border: 1px solid #c5d2e9;
   border-radius: 0.4rem;
   background: #edf3fd;
   color: #1c407e;
   font: inherit;
+  font-size: 0.9em;
   cursor: pointer;
 }
 
-.rope-scene-play:focus-visible,
-.rope-scene-seek:focus-visible {
+.rope-example-toggle {
+  margin-top: 0.8rem;
+}
+
+.rope-slot-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: center;
+  margin-top: 0.8rem;
+}
+
+.rope-slot-controls select {
+  margin-left: 0.35rem;
+}
+
+.rope-example-toggle:focus-visible,
+.rope-slot-controls button:focus-visible,
+.rope-slider input:focus-visible {
   outline: 2px solid #245fc5;
   outline-offset: 3px;
 }
 
-.rope-scene-seek {
-  flex: 1;
-  min-width: 0;
-  min-height: 2.75rem;
-  margin: 0;
-  accent-color: #245fc5;
+.rope-scene figcaption {
+  margin-top: 0.45rem;
+  font-size: 0.9em;
 }
 
-.rope-scene figcaption {
-  margin-top: 0.3rem;
-  font-size: 0.9em;
+@media (max-width: 600px) {
+  .rope-slider {
+    grid-template-columns: 1fr 3rem;
+  }
+
+  .rope-slider > span:first-child {
+    grid-column: 1 / -1;
+  }
 }

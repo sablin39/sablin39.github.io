@@ -9,18 +9,16 @@ show_copyright: false
 date: 2026-11-20 17:27:28
 categories: Algebra
 tags: [algebra,"lie group and lie algebra"]
-cover: 
+cover: se3.png
 ---
 
-With $n$ real features and $p$ position coordinates, a nontrivial smooth family of orthogonal transformations can encode between $1$ and $\min(p,\lfloor n/2\rfloor)$ independent position directions. The limiting factor is how rotations compose when a position has more than one coordinate. A quaternion attempt and the axial RoPE used in vision-language models illustrate what this composition requires.
+In this blog post we proved that With $n$ features and $p$ position coordinates, nontrivial orthogonal RoPE supports between $1$ and $\min(p,\lfloor n/2\rfloor)$ independent position directions. After reviewing the relative-position law and matrix exponential, the post shows why quaternion rotations fail to compose, how axial RoPE restores commutativity, and why common rotation planes bound the Lie algebra rank by $\lfloor n/2\rfloor$.
 
 <!-- more -->
 
 ## A quick review of RoPE and orthogonal matrices
 
 ### The relative-position law
-
-In attention, a query vector and a key vector are compared by a dot product. RoPE rotates their features before this comparison so that the score depends on relative position. For query $q$ at position $x$ and key $k$ at position $y$, the goal is for $(\mathcal R_xq)^T(\mathcal R_yk)$ to depend on the displacement $y-x$, not on the absolute positions separately. The following equation imposes exactly that requirement; it is a definition of the desired behavior, not an assumption to be derived from a particular query or key.
 
 Standard RoPE rotates each pair of query and key features through an angle $\omega x$. Here $x\in\mathbb{R}$ is the scalar position and $\omega\in\mathbb{R}$ is the frequency assigned to that pair. The full encoding matrix arranges these rotations in diagonal blocks, as in [苏剑林. (Mar. 23, 2021). 《Transformer升级之路：2、博采众长的旋转式位置编码 》](https://kexue.fm/archives/8265).
 
@@ -51,8 +49,8 @@ For RoPE, the smooth family starts at $\mathcal{R}_0=I_n$, where the determinant
 
 With the addition law, $\mathcal{R}:(\mathbb{R},+)\to SO(n)$ is a group homomorphism.
 
-<figure class="rope-scene" data-rope-scene="group">
-  <figcaption>Compare both orders with a shared world axis, then with B turning about a perpendicular axis.</figcaption>
+<figure class="rope-scene" data-rope-scene="relative-position">
+  <figcaption>Move both positions together to see that the encoded dot product is invariant; change their displacement to see it vary.</figcaption>
 </figure>
 
 The Lie algebra describes the infinitesimal rotations at the identity. Let $Q(t)\in SO(n)$ be a smooth matrix curve with real parameter $t$ and $Q(0)=I_n$. Its derivative at the identity is the matrix $J=Q'(0)\in\mathbb{R}^{n\times n}$. Differentiating orthogonality at zero gives
@@ -106,19 +104,19 @@ This optional section is included for interest rather than as a prerequisite for
 
 For a complex matrix $W\in\mathbb{C}^{n\times n}$, the adjoint $W^*$ is its conjugate transpose.
 $$
-SU(n)\subset U(n),
-\qquad
-U(n)=\{W\in\mathbb{C}^{n\times n}:W^*W=I_n\},
-\qquad
+SU(n)\subset U(n), \\
+
+U(n)=\{W\in\mathbb{C}^{n\times n}:W^*W=I_n\}, \\
+
 SU(n)=\{W\in U(n):\det W=1\}.
 $$
 The generator $Z\in\mathbb{C}^{n\times n}$ is anti-Hermitian. For special unitary generators, the trace $\operatorname{tr}Z$, the sum of the diagonal entries, also vanishes.
 $$
-\mathfrak{u}(n)=\{Z\in\mathbb{C}^{n\times n}:Z^*=-Z\},
-\qquad
+\mathfrak{u}(n)=\{Z\in\mathbb{C}^{n\times n}:Z^*=-Z\}, \\
+
 \mathfrak{su}(n)=\{Z\in\mathfrak{u}(n):\operatorname{tr}Z=0\}.
 $$
-The [determinant–exponential identity](https://spaces.ac.cn/archives/6377) gives $\det(e^{tZ})=e^{t\operatorname{tr}Z}$, so the determinant stays at $1$ for all $t$ exactly when $\operatorname{tr}Z=0$.
+The [苏剑林. (Feb. 18, 2019). 《恒等式 det(exp(A)) = exp(Tr(A)) 赏析 》](https://spaces.ac.cn/archives/6377) gives $\det(e^{tZ})=e^{t\operatorname{tr}Z}$, so the determinant stays at $1$ for all $t$ exactly when $\operatorname{tr}Z=0$.
 
 The exponential map also appears in quantum mechanics, with a factor of $i$ that converts a Hermitian observable into an anti-Hermitian generator. Let $H\in\mathbb{C}^{n\times n}$ be the time-independent Hermitian Hamiltonian and $\hbar>0$ the reduced Planck constant. At time $t\in\mathbb{R}$, the state ket $\lvert\psi(t)\rangle\in\mathbb{C}^n$ is a column vector, and $U_t\in U(n)$ is its time-evolution matrix. The Schrödinger equation and its solution are
 $$
@@ -131,8 +129,8 @@ U_t=e^{-itH/\hbar}.
 $$
 The generator of $U_t$ is $-iH/\hbar\in\mathfrak{u}(n)$. For real time increments $t,s$, the evolution matrices are unitary and compose by adding the increments.
 $$
-U_t^*U_t=e^{itH/\hbar}e^{-itH/\hbar}=I_n,
-\qquad
+U_t^*U_t=e^{itH/\hbar}e^{-itH/\hbar}=I_n, \\
+
 U_tU_s=U_{t+s}.
 $$
 Its determinant need not equal $1$:
@@ -200,6 +198,10 @@ e^{\xi\mathbf{i}}e^{\eta\mathbf{j}}-e^{\eta\mathbf{j}}e^{\xi\mathbf{i}}
 $$
 For general $\xi$ and $\eta$, the order changes the result, so the encoding fails the relative-position law.
 
+<figure class="rope-scene" data-rope-scene="quaternion-failure">
+  <figcaption>Compare the two quaternion products component by component. Their difference is nonzero only in the $\mathbf{k}$ direction and equals $2\sin\xi\sin\eta$.</figcaption>
+</figure>
+
 The same limitation applies to any smooth encoding that uses multiplication of unit quaternions to satisfy the relative-position law. At the identity, its coordinate generators are pure imaginary because differentiating $\rho\overline{\rho}=1$ gives $a+\bar a=0$. For two pure imaginary quaternion generators $a,b\in\mathbb{H}$, the infinitesimal difference between the two composition orders is governed by $ab-ba=2a\times b$, where the cross product identifies $a$ and $b$ with their vectors in $\mathbb{R}^3$. The cross product vanishes only when the generators are linearly dependent. All the coordinate generators therefore lie along one imaginary axis, giving at most one independent direction.
 
 ### Axial RoPE
@@ -246,8 +248,8 @@ $$
 $$
 It is this vanishing commutator that lets the exponentials compose in either order, not orthogonality alone.
 
-<figure class="rope-scene" data-rope-scene="rank">
-  <figcaption>Left: in $SO(3)$, turns about perpendicular axes reach different orientations in the two orders. Right: in $SO(4)$, turns in disjoint feature planes reach the same orientation.</figcaption>
+<figure class="rope-scene" data-rope-scene="angle-map">
+  <figcaption>Switch between independent axial angles and a shared generator. Move along $\ker\Omega$ to see that a position vector can change while the encoding stays fixed.</figcaption>
 </figure>
 
 Axial RoPE assigns each feature pair to one position axis, with a frequency for that pair. Qwen2-VL's multimodal RoPE (M-RoPE) uses this idea for time, height, and width.[^1] Qwen3-VL interleaves the axis assignments across frequency bands, with each rotary pair still using one coordinate.[^2] Cosmos 3 likewise divides the rotary channels of each attention head among temporal, height, and width coordinates. [^3]
@@ -323,16 +325,16 @@ $$
 \dim\mathfrak a\le m.
 $$
 
-The same eigenvectors also supply the real rotation planes. Choose a unit eigenvector $z=u-iv$ and its conjugate $\bar z=u+iv$ from the common orthonormal basis. Their orthogonality gives
+The same eigenvectors also supply the real rotation planes. Choose a unit eigenvector $z=u+iv$ and its conjugate $\bar z=u-iv$ from the common orthonormal basis. Their orthogonality gives
 $$
 0=z^*\bar z
-=u^Tu-v^Tv-2iu^Tv,
+=u^Tu-v^Tv+2iu^Tv,
 $$
-so $u^Tv=0$ and $\|u\|=\|v\|$. If $z$ satisfies $Az=i\theta z$, separating real and imaginary parts gives
+so $u^Tv=0$ and $\|u\|=\|v\|$. Since $\|z\|=1$, each of $u$ and $v$ has norm $1/\sqrt2$. Normalize them separately to obtain unit vectors $\hat u=\sqrt2\,u$ and $\hat v=\sqrt2\,v$, which are orthonormal. If $z$ satisfies $Az=i\theta z$, separating real and imaginary parts gives
 $$
 Au=-\theta v,\qquad Av=\theta u.
 $$
-Thus $(u,v)$ is an orthonormal ordered basis, and $A$ acts as $\theta K$ on that plane. Applying this to every conjugate pair gives an orthogonal matrix $P$ and real linear functionals $\theta_\ell:\mathfrak a\to\mathbb R$ such that
+Thus, in the ordered orthonormal basis $(\hat u,\hat v)$, $A$ acts as $\theta K$ on that plane. Applying this to every conjugate pair gives an orthogonal matrix $P$ and real linear functionals $\theta_\ell:\mathfrak a\to\mathbb R$ such that
 $$
 A=P\,\operatorname{diag}\!\left(
 \theta_1(A)K,\ldots,\theta_m(A)K,[0]
@@ -340,6 +342,10 @@ A=P\,\operatorname{diag}\!\left(
 \qquad\text{for every }A\in\mathfrak a.
 $$
 We call this result the **common-plane decomposition**. The supporting spectral and simultaneous-diagonalization results are linked above; the conversion from complex conjugate eigenspaces to real rotation planes is shown directly.
+
+<figure class="rope-scene" data-rope-scene="common-plane">
+  <figcaption>Compare $A(\theta)$ with $P^TA(\theta)P$ for varying $\theta$. The basis stays fixed while the off-diagonal blocks remain zero.</figcaption>
+</figure>
 
 ### Lie algebra rank from the common-plane decomposition
 
@@ -360,6 +366,10 @@ $$
 =m=\left\lfloor\frac n2\right\rfloor.}
 $$
 This rank counts the maximum number of independent infinitesimal rotation planes available to a commuting encoding. It is neither the dimension of $\mathfrak{so}(n)$ nor the matrix rank of any individual generator. In particular, $\mathfrak{so}(3)$ has rank one, while $\mathfrak{so}(4)$ has rank two.
+
+<figure class="rope-scene" data-rope-scene="feature-slots">
+  <figcaption>Assign independent position directions to the available feature planes. Once every plane is occupied, another direction must share an existing angle.</figcaption>
+</figure>
 
 ### The position-angle map and its rank
 
@@ -412,7 +422,7 @@ For example, take $J=\operatorname{diag}(K,K)$ in four feature dimensions. The t
 For axial RoPE, each row of $\Omega$ uses a single coordinate. The general form allows each plane to use a linear combination of the position coordinates in the shared rotation basis.
 
 <link rel="stylesheet" href="{% asset_path animations.css %}">
-<script defer src="{% asset_path animations.js %}"></script>
+<script type="module" src="{% asset_path animations.js %}"></script>
 
 [^1]: Peng Wang et al. (2024). [Qwen2-VL: Enhancing Vision-Language Model's Perception of the World at Any Resolution](https://arxiv.org/html/2409.12191). arXiv preprint.
 [^2]: Shuai Bai et al. (2025). [Qwen3-VL Technical Report](https://arxiv.org/html/2511.21631v1). arXiv preprint, §2.1.
