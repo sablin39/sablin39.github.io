@@ -36,13 +36,13 @@ export default {
     ctx.stroke();
     ctx.restore();
 
-    kit.text(ctx, 'Quaternion turns', 36, 124, { size: 21, weight: 650 });
-    kit.text(ctx, 'so(3) · A about x, B about y', 36, 149, { size: 15, color: muted });
+    kit.text(ctx, 'Perpendicular-axis turns', 36, 124, { size: 21, weight: 650 });
+    kit.text(ctx, 'SO(3) · Turns about perpendicular axes', 36, 149, { size: 15, color: muted });
     drawCubeRun(ctx, kit, 118, 'A then B', orderAB);
     drawCubeRun(ctx, kit, 300, 'B then A', orderBA);
 
     kit.text(ctx, 'Disjoint feature planes', 432, 124, { size: 21, weight: 650 });
-    kit.text(ctx, 'so(4) · Each turn acts on its own pair', 432, 149, { size: 15, color: muted });
+    kit.text(ctx, 'SO(4) · Turns in disjoint feature planes', 432, 149, { size: 15, color: muted });
     kit.text(ctx, 'A · (1, 2)', 600, 175, { size: 14, weight: 650, align: 'center', color: blue });
     kit.text(ctx, 'B · (3, 4)', 715, 175, { size: 14, weight: 650, align: 'center', color: orange });
 
@@ -57,7 +57,7 @@ export default {
       kit.text(ctx, 'Same pair of angles', 599, 399, {
         size: 16, weight: 650, align: 'center', color: green
       });
-      kit.footer(ctx, 'Rank 1 in so(3)', 'Rank 2 in so(4)');
+      kit.footer(ctx, 'Noncommuting turns in SO(3)', 'Commuting turns in SO(4)');
     } else {
       kit.footer(ctx, second > 0 ? 'Apply each second turn' : 'Apply each first turn');
     }
