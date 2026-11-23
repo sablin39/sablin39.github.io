@@ -1,6 +1,35 @@
 'use strict';
 
-const { dirname, join } = require('node:path').posix;
+const { posix, relative, sep } = require('node:path');
+const { basename, dirname, join } = posix;
+
+// Newly discovered script and style assets can have the wrong owner on Windows.
+// Resolve their owner from the source folder before Hexo expands asset_path tags.
+hexo.extend.filter.register('before_generate', () => {
+  if (!hexo.config.post_asset_folder) return;
+
+  const PostAsset = hexo.model('PostAsset');
+  const owners = new Map(hexo.model('Post').find({}).map(post => [
+    relative(hexo.base_dir, post.asset_dir).split(sep).join('/'),
+    post._id
+  ]));
+
+  return Promise.all(PostAsset.find({}).map(asset => {
+    if (!/\.(?:css|js)$/i.test(asset._id)) return;
+
+    const post = owners.get(dirname(asset._id));
+    const slug = basename(asset._id);
+    if (!post || (asset.post === post && asset.slug === slug)) return;
+
+    return PostAsset.save({
+      _id: asset._id,
+      post,
+      slug,
+      modified: true,
+      renderable: asset.renderable
+    });
+  }));
+}, 5);
 
 function findEditorAsset({ hexo, postPath }, href) {
   if (!postPath || hexo.config.relative_link || /^(?:[a-z][a-z\d+.-]*:|[\\/]|#)/i.test(href)) return;

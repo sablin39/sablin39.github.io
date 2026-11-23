@@ -1,5 +1,6 @@
 ---
 title: 'Inline math: $E = mc^2$'
+title_text: 'Inline math: E = mc²'
 description: 'Inline formulas in titles and abstracts: $E = mc^2$ and $\alpha_i + \beta_j$.'
 comments: true
 toc: true

@@ -1,5 +1,6 @@
 ---
 title: 'Why Orthogonal RoPE Supports at Most $\lfloor n/2 \rfloor$ Independent Position Directions'
+title_text: 'Why Orthogonal RoPE Supports at Most ⌊n/2⌋ Independent Position Directions'
 comments: false
 toc: true
 donate: false
@@ -48,13 +49,17 @@ For RoPE, the smooth family starts at $\mathcal{R}_0=I_n$, where the determinant
 
 With the addition law, $\mathcal{R}:(\mathbb{R},+)\to SO(n)$ is a group homomorphism.
 
+<figure class="rope-scene" data-rope-scene="group">
+  <figcaption>Compare both orders with a shared world axis, then with B turning about a perpendicular axis.</figcaption>
+</figure>
+
 The Lie algebra describes the infinitesimal rotations at the identity. Let $Q(t)\in SO(n)$ be a smooth matrix curve with real parameter $t$ and $Q(0)=I_n$. Its derivative at the identity is the matrix $J=Q'(0)\in\mathbb{R}^{n\times n}$. Differentiating orthogonality at zero gives
 $$
 Q(t)^TQ(t)=I_n
 \quad\Longrightarrow\quad
 J^T+J=0.
 $$
-The real skew-symmetric matrices form $\mathfrak{so}(n)$, the Lie algebra of $SO(n)$. A curve in $O(n)$ through $I_n$ also stays in $SO(n)$ near $I$, so the two groups have the same Lie algebra. In the plane, every skew-symmetric matrix is a scalar multiple of one generator.
+The real skew-symmetric matrices form $\mathfrak{so}(n)$, the [Lie algebra of the rotation group](https://arxiv.org/pdf/math-ph/0005032#page=43). A curve in $O(n)$ through $I_n$ also stays in $SO(n)$ near $I_n$, so the two groups have the same Lie algebra. In the plane, every skew-symmetric matrix is a scalar multiple of one generator.
 
 ### The exponential map in the plane
 
@@ -80,9 +85,13 @@ R_0=I_2
 \quad\Longrightarrow\quad
 R_\theta=e^{\theta K}.
 $$
-Since $K^2=-I_2$, the even and odd terms of the exponential series give $e^{\theta K}=(\cos\theta)I_2+(\sin\theta)K$. Identifying a planar vector with a complex scalar $z\in\mathbb{C}$ makes $K$ act as multiplication by $i$, so the same rotation is $z\mapsto e^{i\theta}z=(\cos\theta+i\sin\theta)z$.
+Since $K^2=-I_2$, the even and odd terms in the [matrix exponential](https://nhigham.com/2020/05/28/what-is-the-matrix-exponential/) series give $e^{\theta K}=(\cos\theta)I_2+(\sin\theta)K$. Identifying a planar vector with a complex scalar $z\in\mathbb{C}$ makes $K$ act as multiplication by $i$, so the same rotation is $z\mapsto e^{i\theta}z=(\cos\theta+i\sin\theta)z$.
 
 A planar RoPE block with frequency $\omega$ uses $\theta=\omega x$, so its encoding at position $x$ is $e^{x(\omega K)}$.
+
+<figure class="rope-scene" data-rope-scene="algebra">
+  <figcaption>The point on the axis stays fixed. Follow the two off-axis arrows as the turn increment shrinks to zero.</figcaption>
+</figure>
 
 {% collapse "Quantum evolution and RoPE in bra-ket notation" %}
 For a complex matrix $W\in\mathbb{C}^{n\times n}$, the adjoint $W^*$ is its conjugate transpose.
@@ -93,13 +102,13 @@ U(n)=\{W\in\mathbb{C}^{n\times n}:W^*W=I_n\},
 \qquad
 SU(n)=\{W\in U(n):\det W=1\}.
 $$
-The generator $Z\in\mathbb{C}^{n\times n}$ is anti-Hermitian. Special unitary generators also have trace zero.
+The generator $Z\in\mathbb{C}^{n\times n}$ is anti-Hermitian. For special unitary generators, the trace $\operatorname{tr}Z$, the sum of the diagonal entries, also vanishes.
 $$
 \mathfrak{u}(n)=\{Z\in\mathbb{C}^{n\times n}:Z^*=-Z\},
 \qquad
 \mathfrak{su}(n)=\{Z\in\mathfrak{u}(n):\operatorname{tr}Z=0\}.
 $$
-The identity $\det(e^{tZ})=e^{t\operatorname{tr}Z}$ gives the trace constraint for $\mathfrak{su}(n)$. The determinant stays at $1$ for all $t$ exactly when $\operatorname{tr}Z=0$.
+The [determinant–exponential identity](https://spaces.ac.cn/archives/6377) gives $\det(e^{tZ})=e^{t\operatorname{tr}Z}$, so the determinant stays at $1$ for all $t$ exactly when $\operatorname{tr}Z=0$.
 
 The exponential map also appears in quantum mechanics, with a factor of $i$ that converts a Hermitian observable into an anti-Hermitian generator. Let $H\in\mathbb{C}^{n\times n}$ be the time-independent Hermitian Hamiltonian and $\hbar>0$ the reduced Planck constant. At time $t\in\mathbb{R}$, the state ket $\lvert\psi(t)\rangle\in\mathbb{C}^n$ is a column vector, and $U_t\in U(n)$ is its time-evolution matrix. The Schrödinger equation and its solution are
 $$
@@ -122,7 +131,7 @@ $$
 $$
 Imposing $\operatorname{tr}H=0$ makes the evolution special unitary for all $t$; at a particular time $t\ne0$, $\operatorname{tr}H\in(2\pi\hbar/t)\mathbb{Z}$ suffices. Thus real rotations use $e^{\theta J}$ with $J^T=-J$, whereas quantum evolution uses $e^{-itH/\hbar}$ with $H^*=H$.
 
-Bra-ket notation also provides a compact way to write RoPE. A ket $\lvert v\rangle\in\mathbb{C}^n$ is a column vector, and its bra $\langle v\rvert$ is the conjugate-transpose row vector. Write the encoded query and key as kets
+In [bra-ket notation](https://quantum.cloud.ibm.com/learning/en/courses/basics-of-quantum-information/quantum-circuits/inner-products-and-projections), a ket $\lvert v\rangle\in\mathbb{C}^n$ is a column vector, and its bra $\langle v\rvert$ is the conjugate-transpose row vector. The encoded query and key are then
 $$
 \lvert q_{x}\rangle
 =\mathcal{R}_{x}\lvert q\rangle,
@@ -163,12 +172,16 @@ This also limits any smooth encoding that composes by multiplying unit quaternio
 
 ### Axial RoPE
 
-Four real features already give us room for two separate planar rotations. Let the scalar coordinate $\xi$ rotate the first pair of features and $\eta$ the second. This gives the encoding matrix $\mathcal{R}_{(\xi,\eta)}\in SO(4)$
+Four real features already give us room for two separate planar rotations. Let the scalar coordinate $\xi$ rotate the first pair of features and $\eta$ the second. This gives the [block-diagonal encoding matrix](https://www.cfm.brown.edu/people/dobrush/cs52/Mathematica/Part2/partition.html) $\mathcal{R}_{(\xi,\eta)}\in SO(4)$
 $$
 \mathcal{R}_{(\xi,\eta)}
 =\operatorname{diag}\!\left(e^{\xi K},e^{\eta K}\right).
 $$
 A step in $\xi$ acts only on the first pair, and a step in $\eta$ acts only on the second, so their order makes no difference. Within each plane, angles add as in standard RoPE.
+
+<figure class="rope-scene" data-rope-scene="rank">
+  <figcaption>The cube shows order dependence through the 3D action of unit quaternions. The wheels assign the two position coordinates to disjoint feature planes.</figcaption>
+</figure>
 
 Axial RoPE assigns each feature pair to one position axis, with a frequency for that pair. Qwen2-VL's multimodal RoPE (M-RoPE) uses this idea for time, height, and width.[^1] Qwen3-VL interleaves the axis assignments across frequency bands, with each rotary pair still using one coordinate.[^2]
 
@@ -198,7 +211,7 @@ Conversely, pairwise commuting skew-symmetric generators give an orthogonal enco
 
 For a single position coordinate, the planar rotation blocks follow from the decomposition of one skew-symmetric generator, as shown in [Su's completeness analysis of RoPE](https://kexue.fm/archives/9403).
 
-For vector positions, the condition $[J_i,J_j]=0$ forces all generators to share the same mutually orthogonal rotation planes. To see why, view the $J_i$ over $\mathbb{C}$. They are commuting normal matrices, so they have a common orthonormal eigenbasis. Their eigenvalues are purely imaginary and, because the matrices are real, every nonzero tuple of joint eigenvalues pairs with its complex conjugate. Choose an orthonormal basis for one joint eigenspace of each pair and take its conjugate basis for the other. The real and imaginary parts of each such eigenvector span one real plane where every $J_i$ acts as a scalar multiple of $K$. The common zero eigenspace supplies the directions fixed by all the rotations.
+For vector positions, the condition $[J_i,J_j]=0$ forces all generators to share the same mutually orthogonal rotation planes. To see why, view the $J_i$ over $\mathbb{C}$. These matrices are normal and commute, so [simultaneous unitary diagonalization](https://home.iitk.ac.in/~rksr/html/06TRIA.htm) gives them a common orthonormal eigenbasis. Their eigenvalues are purely imaginary and, because the matrices are real, every nonzero tuple of joint eigenvalues pairs with its complex conjugate. Choose an orthonormal basis for one joint eigenspace of each pair and take its conjugate basis for the other. The real and imaginary parts of each such eigenvector span one real plane where every $J_i$ acts as a scalar multiple of $K$. The common zero eigenspace supplies the directions fixed by all the rotations.
 
 Write $m=\lfloor n/2\rfloor$. Pair any spare fixed directions into planes with zero coefficients, leaving one fixed coordinate when $n$ is odd. Let $P\in O(n)$ be the orthogonal matrix whose columns give this basis, and let $\Omega=(\omega_{\ell i})\in\mathbb{R}^{m\times p}$ map the position vector to the vector of plane angles. Its entry $\omega_{\ell i}\in\mathbb{R}$ is the coefficient of $x_i$ in the scalar angle $\theta_\ell(\mathsf{x})\in\mathbb{R}$ of plane $\ell$. The encoding is
 $$
@@ -217,6 +230,9 @@ where the final scalar block $[1]$ appears only when $n$ is odd.
 A displacement vector $\mathsf{v}\in\mathbb{R}^p$ leaves the encoding unchanged along the entire line $\mathsf{x}+t\mathsf{v}$, $t\in\mathbb{R}$, exactly when $\Omega\mathsf{v}=0$. Thus the number of independent position directions is $\operatorname{rank}\Omega\le m$.
 
 Assigning a separate plane to each of $m$ coordinates attains the bound. For axial RoPE, each row of $\Omega$ uses a single coordinate. The general form allows each plane to use a linear combination of the position coordinates in the shared rotation basis.
+
+<link rel="stylesheet" href="{% asset_path animations.css %}">
+<script defer src="{% asset_path animations.js %}"></script>
 
 [^1]: Peng Wang et al. (2024). [Qwen2-VL: Enhancing Vision-Language Model's Perception of the World at Any Resolution](https://arxiv.org/html/2409.12191). arXiv preprint.
 [^2]: Shuai Bai et al. (2025). [Qwen3-VL Technical Report](https://arxiv.org/html/2511.21631v1). arXiv preprint, §2.1.
