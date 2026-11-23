@@ -31,6 +31,6 @@
     "hexo-renderer-ejs": "^2.0.0",
     "hexo-renderer-marked": "^7.0.1",
     "hexo-server": "^3.0.0",
-    "hexo-theme-kratos-rebirth": "git+https://github.com/sablin39/Kratos-Rebirth.git#05f85062d018b04c5d4d1002857745780944c7cb"
+    "hexo-theme-kratos-rebirth": "github:sablin39/Kratos-Rebirth#main"
   }
 }
