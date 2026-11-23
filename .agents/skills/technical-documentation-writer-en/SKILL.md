@@ -30,6 +30,14 @@ Treat the author as the client and source of facts, not necessarily as a member 
 
 Ask when the audience or through-line is missing and would materially affect the structure. Do not invent broad audiences such as “all developers” or “all users.”
 
+For blog writing, explicitly ask the human author for the intended readers' profile before drafting or substantially revising content. Record the supplied existing knowledge, goals, relevant tools, and known gaps. Do not infer the profile from the author's expertise or from the document's subject matter. If the author has already supplied it, use that profile without asking again.
+
+Apply this derivability gate to every new explanation, theorem, example, and derivation step:
+
+- Derive it from previous blog posts, material already established in the current post, or the intended readers' profile supplied by the human author.
+- Obtain explicit author approval before introducing material outside those sources. If an external theorem is necessary, name it, link a reference, and explain why the main argument needs it.
+- Do not present an unsupported statement as something the intended reader can derive.
+
 - Keep the audience model consistent. Do not repeat standard definitions for experts or assume later that beginners already understand a core concept.
 - Deliver on the title and opening promptly. If they promise implementation choices, comparisons, or open-source alternatives, do not postpone them behind generic tutorials.
 - When one source serves implementers, beginners, and auditors, prefer separate **main report, mechanism tutorial, and evidence appendix** documents rather than forcing everyone through one long path.
@@ -120,7 +128,7 @@ When creating or restructuring a document, read [Document types and structures](
 
 Before delivery, read the [Pre-publication checklist](references/quality-checklist.md) and perform at least five passes:
 
-1. **Audience and through-line**: Check the intended readers, goals, and content boundary. Remove author-process material, defensiveness, and off-topic content.
+1. **Audience and through-line**: Check the author-supplied intended-reader profile, goals, and content boundary. Verify that each new explanation, theorem, example, and derivation step is derivable from previous posts, the current post, or that profile; identify any author-approved external theorem and its reference. Remove author-process material, defensiveness, and off-topic content.
 2. **Facts, argument, and consistency**: Check versions, terms, names, parameters, paths, units, examples, and conclusions. Ensure each key claim has its mechanism, load-bearing evidence, and necessary conditions, and that comparison boundaries and evidence levels are compatible.
 3. **Task and proportion**: Walk through the task as the intended reader. Keep key detail sufficient and secondary material restrained. State limitations only where they affect choices, actions, or interpretation; do not repeat exclusions already conveyed by positive scope. For condensed drafts, use the load-bearing content checklist to ensure engineering constraints and evidence were not sacrificed to generic tutorials.
 4. **Language and information density**: Check long sentences, ambiguous references, typographical errors, filler, mechanical patterns, fragmented paragraphs, and repetition.

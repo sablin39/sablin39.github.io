@@ -4,6 +4,20 @@
 
 Edit real posts, including their front matter and assets, only with explicit user permission. Use existing posts as read-only regression examples and put test content in `source/_posts/test-formula.md` or in temporary fixtures in the preview worktree.
 
+### Agent-assisted writing
+
+Follow the applicable skills in `.agents/skills/` explicitly. When creating, expanding, or substantially revising technical content, use `technical-documentation-writer-en`.
+
+Before writing, ask the human author for the intended readers' profile and record it. Include their existing knowledge, goals, relevant tools, and known gaps. Do not infer a missing profile from the author's expertise or from the document's subject matter.
+
+Every new explanation, theorem, example, or derivation step must be derivable from at least one of these sources:
+
+- previous blog posts;
+- material already established in the current post;
+- the intended readers' profile supplied by the human author.
+
+Material outside those sources requires explicit author approval. If new material needs an external theorem, name it, link a reference, and show why it is necessary. Do not present an unsupported statement as something the intended reader can derive.
+
 ## Theme preview
 
 Keep reusable layouts, styles, and scripts in the [Kratos-Rebirth fork](https://github.com/sablin39/Kratos-Rebirth). Create an experimental branch from the fork’s `main`, then run `pnpm install --frozen-lockfile` and `pnpm run build` in the theme checkout.
