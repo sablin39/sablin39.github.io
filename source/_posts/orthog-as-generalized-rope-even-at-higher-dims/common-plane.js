@@ -1,4 +1,4 @@
-import { defineScene, makeSlider, makeCanvas, clearCanvas, text, palette, format } from './scene-player.js';
+import { defineScene, autoPlay, makeCanvas, clearCanvas, text, palette, format } from './scene-player.js';
 
 function matrixGrid(context, matrix, left, top, title, subtitle) {
   text(context, title, left, top - 60, { size: 21, weight: 650 });
@@ -53,13 +53,14 @@ function draw(figure, angle) {
 defineScene('common-plane', {
   mount(figure) {
     figure.classList.add('rope-interactive');
-    figure.sceneCanvas = makeCanvas(figure, 800, 430, 'Interactive shared-plane matrix decomposition');
+    figure.sceneCanvas = makeCanvas(figure, 800, 430, 'Animated shared-plane matrix decomposition');
     const state = { angle: 0.7 };
-    makeSlider(figure, 'plane-angle', 'θ', -Math.PI, Math.PI, 0.05, state.angle, value => {
-      state.angle = value;
-      draw(figure, state.angle);
+    autoPlay(figure, {
+      duration: 9000,
+      onFrame(progress) {
+        state.angle = 0.7 + 1.2 * Math.sin(progress * Math.PI * 2);
+        draw(figure, state.angle);
+      }
     });
-    draw(figure, state.angle);
-    return { set: (name, value) => { state[name] = value; draw(figure, state.angle); } };
   }
 });

@@ -47,6 +47,80 @@ export function makeSlider(figure, name, label, min, max, step, value, onChange)
   return input;
 }
 
+export function autoPlay(figure, { duration = 6000, onFrame, onState }) {
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = 'rope-scene-play';
+  button.setAttribute('aria-label', 'Pause animation');
+  button.textContent = 'Pause';
+  figure.append(button);
+
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let playing = !reducedMotion.matches;
+  let requestId = null;
+  let startedAt;
+  let elapsed = 0;
+
+  function updateButton() {
+    button.textContent = playing ? 'Pause' : 'Play';
+    button.setAttribute('aria-label', playing ? 'Pause animation' : 'Play animation');
+  }
+
+  function stop() {
+    if (requestId !== null) cancelAnimationFrame(requestId);
+    requestId = null;
+    startedAt = undefined;
+  }
+
+  function frame(time) {
+    if (!figure.isConnected) {
+      stop();
+      return;
+    }
+    startedAt ??= time - elapsed;
+    elapsed = (time - startedAt) % duration;
+    onFrame(elapsed / duration);
+    if (playing) requestId = requestAnimationFrame(frame);
+  }
+
+  function play() {
+    if (requestId !== null) return;
+    playing = true;
+    updateButton();
+    requestId = requestAnimationFrame(frame);
+  }
+
+  function pause() {
+    playing = false;
+    updateButton();
+    stop();
+  }
+
+  button.addEventListener('click', () => {
+    if (playing) pause();
+    else play();
+  });
+
+  const observer = new IntersectionObserver(entries => {
+    if (entries.some(entry => entry.isIntersecting) && !reducedMotion.matches) play();
+    else pause();
+  });
+  observer.observe(figure);
+  reducedMotion.addEventListener('change', event => {
+    if (event.matches) {
+      pause();
+      onFrame(1);
+    }
+  });
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) pause();
+    else if (!reducedMotion.matches) play();
+  });
+  onFrame(playing ? 0 : 1);
+  updateButton();
+  return { play, pause };
+}
+
 export function makeCanvas(figure, width, height, ariaLabel) {
   const canvas = document.createElement('canvas');
   canvas.width = width * 2;

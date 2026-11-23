@@ -44,6 +44,7 @@ function mount(figure, scene) {
   let elapsed = 0;
   let startedAt;
   let requestId = null;
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
   function updateButton(label) {
     toggle.textContent = label;
@@ -97,6 +98,10 @@ function mount(figure, scene) {
 
   updateButton('Play');
   paint();
+  if (!reducedMotion.matches) {
+    updateButton('Pause');
+    requestId = requestAnimationFrame(frame);
+  }
 }
 
 export function mountAnimations() {

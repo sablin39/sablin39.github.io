@@ -1,4 +1,4 @@
-import { defineScene, makeSlider, makeCanvas, clearCanvas, text, arrow, vectorAt, palette, format } from './scene-player.js';
+import { defineScene, autoPlay, makeCanvas, clearCanvas, text, arrow, vectorAt, palette, format } from './scene-player.js';
 
 const center = { x: 220, y: 205 };
 const q = [1, 0.45];
@@ -75,17 +75,16 @@ function draw(figure, x, y) {
 defineScene('relative-position', {
   mount(figure) {
     figure.classList.add('rope-interactive');
-    figure.sceneCanvas = makeCanvas(figure, 800, 460, 'Interactive relative-position dot-product demonstration');
+    figure.sceneCanvas = makeCanvas(figure, 800, 460, 'Animated relative-position dot-product demonstration');
     const state = { x: 0.4, y: 1.3 };
-    makeSlider(figure, 'position-x', 'Position x', -3, 3, 0.1, state.x, value => {
-      state.x = value;
-      draw(figure, state.x, state.y);
+    autoPlay(figure, {
+      duration: 9000,
+      onFrame(progress) {
+        const angle = progress * Math.PI * 2;
+        state.x = 0.4 + 0.8 * Math.sin(angle);
+        state.y = 1.3 + 0.8 * Math.sin(angle + 0.65);
+        draw(figure, state.x, state.y);
+      }
     });
-    makeSlider(figure, 'position-y', 'Position y', -3, 3, 0.1, state.y, value => {
-      state.y = value;
-      draw(figure, state.x, state.y);
-    });
-    draw(figure, state.x, state.y);
-    return { set: (name, value) => { state[name] = value; draw(figure, state.x, state.y); } };
   }
 });

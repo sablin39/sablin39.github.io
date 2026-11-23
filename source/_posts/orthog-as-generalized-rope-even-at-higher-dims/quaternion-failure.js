@@ -1,4 +1,4 @@
-import { defineScene, makeSlider, makeCanvas, clearCanvas, text, palette, format } from './scene-player.js';
+import { defineScene, autoPlay, makeCanvas, clearCanvas, text, palette, format } from './scene-player.js';
 
 function product(xi, eta, reverse) {
   const a = reverse ? eta : xi;
@@ -57,17 +57,16 @@ function draw(figure, xi, eta) {
 defineScene('quaternion-failure', {
   mount(figure) {
     figure.classList.add('rope-interactive');
-    figure.sceneCanvas = makeCanvas(figure, 800, 480, 'Interactive quaternion product comparison');
+    figure.sceneCanvas = makeCanvas(figure, 800, 480, 'Animated quaternion product comparison');
     const state = { xi: 0.7, eta: 1.3 };
-    makeSlider(figure, 'quaternion-xi', 'ξ', 0, Math.PI, 0.05, state.xi, value => {
-      state.xi = value;
-      draw(figure, state.xi, state.eta);
+    autoPlay(figure, {
+      duration: 8000,
+      onFrame(progress) {
+        const angle = progress * Math.PI * 2;
+        state.xi = 0.7 + 0.65 * Math.sin(angle);
+        state.eta = 1.3 + 0.8 * Math.sin(angle + 0.8);
+        draw(figure, state.xi, state.eta);
+      }
     });
-    makeSlider(figure, 'quaternion-eta', 'η', 0, Math.PI, 0.05, state.eta, value => {
-      state.eta = value;
-      draw(figure, state.xi, state.eta);
-    });
-    draw(figure, state.xi, state.eta);
-    return { set: (name, value) => { state[name] = value; draw(figure, state.xi, state.eta); } };
   }
 });

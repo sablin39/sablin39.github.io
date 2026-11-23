@@ -1,4 +1,4 @@
-import { defineScene, makeCanvas, clearCanvas, text, arrow, vectorAt, palette } from './scene-player.js';
+import { defineScene, autoPlay, makeCanvas, clearCanvas, text, arrow, vectorAt, palette } from './scene-player.js';
 
 function slot(context, x, y, index, angle, occupied) {
   context.strokeStyle = occupied ? palette.blue : palette.line;
@@ -13,7 +13,7 @@ function slot(context, x, y, index, angle, occupied) {
   else text(context, 'shared', x + 50, y + 56, { size: 15, align: 'center', color: palette.muted });
 }
 
-function draw(figure, n, used) {
+function draw(figure, n, used, progress = 0) {
   const { context } = figure.sceneCanvas;
   clearCanvas(context, 800, 450);
   const m = Math.floor(n / 2);
@@ -21,7 +21,7 @@ function draw(figure, n, used) {
   text(context, 'Each plane can carry one independent position-angle direction.', 32, 68, { color: palette.muted, size: 16 });
   const gap = (800 - 64 - m * 100) / Math.max(1, m - 1);
   for (let index = 0; index < m; index++) {
-    const angle = index < used ? index * 0.65 + 0.35 : 0;
+    const angle = index < used ? index * 0.65 + 0.35 + progress * Math.PI * 2 : 0;
     slot(context, 32 + index * (100 + gap), 135, index, angle, index < used);
   }
   if (n % 2) text(context, 'One coordinate remains fixed.', 32, 315, { size: 17, color: palette.muted });
@@ -32,43 +32,16 @@ function draw(figure, n, used) {
 defineScene('feature-slots', {
   mount(figure) {
     figure.classList.add('rope-interactive');
-    figure.sceneCanvas = makeCanvas(figure, 800, 450, 'Interactive feature-slot count for orthogonal RoPE');
+    figure.sceneCanvas = makeCanvas(figure, 800, 450, 'Animated feature-slot count for orthogonal RoPE');
     const state = { n: 6, used: 2 };
-    const controls = document.createElement('div');
-    controls.className = 'rope-slot-controls';
-    const dimensions = document.createElement('label');
-    dimensions.textContent = 'Feature dimension n ';
-    const dimension = document.createElement('select');
-    for (const value of [4, 5, 6, 7, 8]) {
-      const option = document.createElement('option');
-      option.value = String(value);
-      option.textContent = String(value);
-      dimension.append(option);
-    }
-    dimension.value = String(state.n);
-    dimension.addEventListener('change', () => {
-      state.n = Number(dimension.value);
-      state.used = Math.min(state.used, Math.floor(state.n / 2));
-      draw(figure, state.n, state.used);
+    autoPlay(figure, {
+      duration: 10000,
+      onFrame(progress) {
+        state.n = progress < 0.5 ? 6 : 5;
+        const phase = progress < 0.5 ? progress * 2 : (progress - 0.5) * 2;
+        state.used = Math.min(Math.floor(state.n / 2), Math.floor(phase * (Math.floor(state.n / 2) + 1)));
+        draw(figure, state.n, state.used, progress);
+      }
     });
-    dimensions.append(dimension);
-    const add = document.createElement('button');
-    add.type = 'button';
-    add.textContent = 'Add independent direction';
-    add.addEventListener('click', () => {
-      state.used = Math.min(Math.floor(state.n / 2), state.used + 1);
-      draw(figure, state.n, state.used);
-    });
-    const remove = document.createElement('button');
-    remove.type = 'button';
-    remove.textContent = 'Remove direction';
-    remove.addEventListener('click', () => {
-      state.used = Math.max(0, state.used - 1);
-      draw(figure, state.n, state.used);
-    });
-    controls.append(dimensions, add, remove);
-    figure.append(controls);
-    draw(figure, state.n, state.used);
-    return { set: (name, value) => { state[name] = value; draw(figure, state.n, state.used); } };
   }
 });

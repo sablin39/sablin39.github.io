@@ -1,4 +1,4 @@
-import { defineScene, makeSlider, makeCanvas, clearCanvas, text, arrow, vectorAt, palette, format } from './scene-player.js';
+import { defineScene, autoPlay, makeCanvas, clearCanvas, text, arrow, vectorAt, palette, format } from './scene-player.js';
 
 function wheel(context, x, y, angle, label) {
   context.beginPath();
@@ -45,27 +45,17 @@ function draw(figure, x1, x2, shared) {
 defineScene('angle-map', {
   mount(figure) {
     figure.classList.add('rope-interactive');
-    figure.sceneCanvas = makeCanvas(figure, 800, 450, 'Interactive position-angle map and kernel');
+    figure.sceneCanvas = makeCanvas(figure, 800, 450, 'Animated position-angle map and kernel');
     const state = { x1: 0.5, x2: -0.2, shared: false };
-    makeSlider(figure, 'angle-x1', 'x₁', -2, 2, 0.1, state.x1, value => {
-      state.x1 = value;
-      draw(figure, state.x1, state.x2, state.shared);
+    autoPlay(figure, {
+      duration: 12000,
+      onFrame(progress) {
+        const phase = progress * Math.PI * 2;
+        state.shared = progress >= 0.5;
+        state.x1 = 0.5 + 0.8 * Math.sin(phase);
+        state.x2 = state.shared ? -state.x1 : -0.2 + 0.6 * Math.sin(phase + 0.6);
+        draw(figure, state.x1, state.x2, state.shared);
+      }
     });
-    makeSlider(figure, 'angle-x2', 'x₂', -2, 2, 0.1, state.x2, value => {
-      state.x2 = value;
-      draw(figure, state.x1, state.x2, state.shared);
-    });
-    const toggle = document.createElement('button');
-    toggle.type = 'button';
-    toggle.className = 'rope-example-toggle';
-    toggle.textContent = 'Switch to shared generator J = diag(K, K)';
-    toggle.addEventListener('click', () => {
-      state.shared = !state.shared;
-      toggle.textContent = state.shared ? 'Switch to axial map Ω = I' : 'Switch to shared generator J = diag(K, K)';
-      draw(figure, state.x1, state.x2, state.shared);
-    });
-    figure.append(toggle);
-    draw(figure, state.x1, state.x2, state.shared);
-    return { set: (name, value) => { state[name] = value; draw(figure, state.x1, state.x2, state.shared); } };
   }
 });
