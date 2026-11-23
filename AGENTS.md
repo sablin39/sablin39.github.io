@@ -4,11 +4,11 @@
 
 Edit real posts, including their front matter and assets, only with explicit user permission. Use existing posts as read-only regression examples and put test content in `source/_posts/test-formula.md` or in temporary fixtures in the preview worktree.
 
-### Agent-assisted writing
+### Agent-ASSISTED writing
 
 Follow the applicable skills in `.agents/skills/` explicitly. When creating, expanding, or substantially revising technical content, use `technical-documentation-writer-en`.
 
-Before writing, ask the human author for the intended readers' profile and record it. Include their existing knowledge, goals, relevant tools, and known gaps. Do not infer a missing profile from the author's expertise or from the document's subject matter.
+Before writing, ask the human author for the intended readers' profile and record it. Include their existing knowledge, goals, relevant tools, and known gaps. Do not infer a missing profile from the author's expertise or from the document's subject matter. Nothing shall be edited without human author's approval.
 
 Every new explanation, theorem, example, or derivation step must be derivable from at least one of these sources:
 
@@ -16,7 +16,7 @@ Every new explanation, theorem, example, or derivation step must be derivable fr
 - material already established in the current post;
 - the intended readers' profile supplied by the human author.
 
-Material outside those sources requires explicit author approval. If new material needs an external theorem, name it, link a reference, and show why it is necessary. Do not present an unsupported statement as something the intended reader can derive.
+Material outside those sources requires explicit author approval. If new material needs an external theorem, name it, link a reference, and show why it is necessary in the reply. Do not present an unsupported statement as something the intended reader can derive.
 
 ## Theme preview
 
