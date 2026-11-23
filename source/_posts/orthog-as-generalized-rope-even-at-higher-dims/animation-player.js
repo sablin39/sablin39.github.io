@@ -1,27 +1,16 @@
-import kit from './kit.js';
-import { createMountedWheel } from './wheel-3d.js';
-import group from './group.js';
 import algebra from './algebra.js';
-import rank from './rank.js';
 
-const drawing = { ...kit, ...createMountedWheel(kit) };
-const scenes = {
-  group: {
-    ...group,
-    title: 'Group composition',
-    description: 'Two world-axis turns of 30 and 45 degrees reach the same cube orientation when the axes coincide, and different orientations when the axes are perpendicular.'
-  },
-  algebra: {
-    ...algebra,
-    title: 'Lie algebra',
-    description: 'A point on the rotation axis stays fixed. As the turn increment shrinks, displacement per unit increment at two other points converges to the tangent.'
-  },
-  rank: {
-    ...rank,
-    title: 'Quaternion turns and disjoint feature planes',
-    description: 'On the left, two unit-quaternion turns about perpendicular axes reach different cube orientations. On the right, turns on separate feature planes reach the same pair of angles in either order.'
-  }
+const drawing = {
+  width: 800,
+  height: 480,
+  palette: algebra.palette,
+  header: algebra.header,
+  footer: algebra.footer,
+  text: algebra.text,
+  pill: algebra.pill,
+  arrow: algebra.arrow
 };
+const scene = algebra;
 
 function mount(figure, scene) {
   const canvas = document.createElement('canvas');
@@ -111,8 +100,7 @@ function mount(figure, scene) {
 }
 
 export function mountAnimations() {
-  for (const figure of document.querySelectorAll('figure.rope-scene[data-rope-scene]')) {
-    const scene = scenes[figure.dataset.ropeScene];
-    if (scene && !figure.querySelector('canvas')) mount(figure, scene);
+  for (const figure of document.querySelectorAll('figure.rope-scene[data-rope-scene="algebra"]')) {
+    if (!figure.querySelector('canvas')) mount(figure, scene);
   }
 }
