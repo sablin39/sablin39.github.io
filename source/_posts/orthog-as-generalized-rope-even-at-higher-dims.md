@@ -49,9 +49,7 @@ For RoPE, the smooth family starts at $\mathcal{R}_0=I_n$, where the determinant
 
 With the addition law, $\mathcal{R}:(\mathbb{R},+)\to SO(n)$ is a group homomorphism.
 
-<figure class="rope-scene" data-rope-scene="relative-position">
-  <figcaption>Move both positions together to see that the encoded dot product is invariant; change their displacement to see it vary.</figcaption>
-</figure>
+<!-- Scene assets retained for later reuse. -->
 
 The Lie algebra describes the infinitesimal rotations at the identity. Let $Q(t)\in SO(n)$ be a smooth matrix curve with real parameter $t$ and $Q(0)=I_n$. Its derivative at the identity is the matrix $J=Q'(0)\in\mathbb{R}^{n\times n}$. Differentiating orthogonality at zero gives
 $$
@@ -95,9 +93,7 @@ Since $K^2=-I_2$, the even and odd terms in the matrix exponential series give $
 
 A planar RoPE block with frequency $\omega$ uses $\theta=\omega x$, so its encoding at position $x$ is $e^{x(\omega K)}$.
 
-<figure class="rope-scene" data-rope-scene="algebra">
-  <figcaption>The point on the axis stays fixed. Follow the two off-axis arrows as the turn increment shrinks to zero.</figcaption>
-</figure>
+<!-- Generator scene assets retained for later reuse. -->
 
 {% collapse "Optional: the same exponential structure in quantum evolution" %}
 This optional section is included for interest rather than as a prerequisite for the RoPE proof. Its central analogy is that a position displacement multiplies a rotation generator, just as elapsed time multiplies a quantum-evolution generator. The matrix exponential identities above are sufficient for the calculations here; the physical notation is only needed to interpret the analogy.
@@ -198,9 +194,7 @@ e^{\xi\mathbf{i}}e^{\eta\mathbf{j}}-e^{\eta\mathbf{j}}e^{\xi\mathbf{i}}
 $$
 For general $\xi$ and $\eta$, the order changes the result, so the encoding fails the relative-position law.
 
-<figure class="rope-scene" data-rope-scene="quaternion-failure">
-  <figcaption>Compare the two quaternion products component by component. Their difference is nonzero only in the $\mathbf{k}$ direction and equals $2\sin\xi\sin\eta$.</figcaption>
-</figure>
+<!-- Quaternion scene assets retained for later reuse. -->
 
 The same limitation applies to any smooth encoding that uses multiplication of unit quaternions to satisfy the relative-position law. At the identity, its coordinate generators are pure imaginary because differentiating $\rho\overline{\rho}=1$ gives $a+\bar a=0$. For two pure imaginary quaternion generators $a,b\in\mathbb{H}$, the infinitesimal difference between the two composition orders is governed by $ab-ba=2a\times b$, where the cross product identifies $a$ and $b$ with their vectors in $\mathbb{R}^3$. The cross product vanishes only when the generators are linearly dependent. All the coordinate generators therefore lie along one imaginary axis, giving at most one independent direction.
 
@@ -248,9 +242,7 @@ $$
 $$
 It is this vanishing commutator that lets the exponentials compose in either order, not orthogonality alone.
 
-<figure class="rope-scene" data-rope-scene="angle-map">
-  <figcaption>Switch between independent axial angles and a shared generator. Move along $\ker\Omega$ to see that a position vector can change while the encoding stays fixed.</figcaption>
-</figure>
+<!-- Angle-map scene assets retained for later reuse. -->
 
 Axial RoPE assigns each feature pair to one position axis, with a frequency for that pair. Qwen2-VL's multimodal RoPE (M-RoPE) uses this idea for time, height, and width.[^1] Qwen3-VL interleaves the axis assignments across frequency bands, with each rotary pair still using one coordinate.[^2] Cosmos 3 likewise divides the rotary channels of each attention head among temporal, height, and width coordinates. [^3]
 
@@ -343,9 +335,7 @@ A=P\,\operatorname{diag}\!\left(
 $$
 We call this result the **common-plane decomposition**. The supporting spectral and simultaneous-diagonalization results are linked above; the conversion from complex conjugate eigenspaces to real rotation planes is shown directly.
 
-<figure class="rope-scene" data-rope-scene="common-plane">
-  <figcaption>Compare $A(\theta)$ with $P^TA(\theta)P$ for varying $\theta$. The basis stays fixed while the off-diagonal blocks remain zero.</figcaption>
-</figure>
+<!-- Common-plane scene assets retained for later reuse. -->
 
 ### Lie algebra rank from the common-plane decomposition
 
@@ -367,9 +357,7 @@ $$
 $$
 This rank counts the maximum number of independent infinitesimal rotation planes available to a commuting encoding. It is neither the dimension of $\mathfrak{so}(n)$ nor the matrix rank of any individual generator. In particular, $\mathfrak{so}(3)$ has rank one, while $\mathfrak{so}(4)$ has rank two.
 
-<figure class="rope-scene" data-rope-scene="feature-slots">
-  <figcaption>Assign independent position directions to the available feature planes. Once every plane is occupied, another direction must share an existing angle.</figcaption>
-</figure>
+<!-- Feature-slot scene assets retained for later reuse. -->
 
 ### The position-angle map and its rank
 
@@ -421,9 +409,7 @@ For example, take $J=\operatorname{diag}(K,K)$ in four feature dimensions. The t
 
 For axial RoPE, each row of $\Omega$ uses a single coordinate. The general form allows each plane to use a linear combination of the position coordinates in the shared rotation basis.
 
-<link rel="stylesheet" href="{% asset_path animations.css %}">
-<script type="module" src="{% asset_path animations.js %}"></script>
-
+<!-- Animation scripts are intentionally not loaded while scene usage is being reviewed. -->
 [^1]: Peng Wang et al. (2024). [Qwen2-VL: Enhancing Vision-Language Model's Perception of the World at Any Resolution](https://arxiv.org/html/2409.12191). arXiv preprint.
 [^2]: Shuai Bai et al. (2025). [Qwen3-VL Technical Report](https://arxiv.org/html/2511.21631v1). arXiv preprint, §2.1.
 [^3]: NVIDIA (2026). Interactive World Simulation with Cosmos for Physical AI, §2.1, Multimodal positional embedding. <https://research.nvidia.com/labs/cosmos-lab/cosmos-simulation/technical-report.pdf>
