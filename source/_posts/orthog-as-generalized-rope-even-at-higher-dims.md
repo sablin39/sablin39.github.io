@@ -322,24 +322,32 @@ Bz=i\theta(B)z\qquad\text{for every }B\in\mathfrak a,
 $$
 where each $\theta(B)$ is real. Linearity extends the eigenvalue relations from the basis to all of $\mathfrak a$. This constructs one common eigenvector without assuming a common eigenbasis.
 
-Write $z=u-iv$ with real vectors $u,v$. They are linearly independent because $\theta_1\ne0$ and
+Write $z=u-iv$ with real vectors $u,v$. To see that they are linearly independent, suppose $au+bv=0$. Since $\theta_1\ne0$, applying $A_1$ gives
 $$
-au+bv=0
-\quad\Longrightarrow\quad
-0=A_1(au+bv)=\theta_1(av-bu)
-\quad\Longrightarrow\quad a=b=0.
+av-bu=0.
 $$
+Multiplying these equations by $a$ and $b$, respectively, and adding them gives $(a^2+b^2)u=0$. But $u=0$ would imply $v=0$ from $A_1u=\theta_1v$, contradicting $z\ne0$. Therefore $u\ne0$, and the real coefficients satisfy $a=b=0$.
+
 Thus $W=\operatorname{span}_{\mathbb R}\{u,v\}$ is two-dimensional. Separating real and imaginary parts in $Bz=i\theta(B)z$ gives
 $$
 Bu=\theta(B)v,\qquad Bv=-\theta(B)u,
 $$
-so $W$ is invariant under every $B\in\mathfrak a$. Choose any orthonormal basis of $W$ by Gram–Schmidt. Every restriction $B|_W$ is skew-symmetric, so its matrix in this basis has the form $\theta_W(B)K$ for some real coefficient $\theta_W(B)$.
+so $W$ is invariant under every $B\in\mathfrak a$. In particular, applying skew-symmetry to $A_1$ gives
+$$
+0=u^TA_1u=\theta_1u^Tv,\qquad
+u^TA_1v=-\theta_1\|u\|^2=-\theta_1\|v\|^2.
+$$
+Since $\theta_1\ne0$, $u$ and $v$ are orthogonal and have the same nonzero norm. Gram–Schmidt in the order $(u,v)$ therefore gives the orthonormal basis
+$$
+\hat u=\frac{u}{\|u\|},\qquad\hat v=\frac{v}{\|v\|}.
+$$
+Every restriction $B|_W$ remains skew-symmetric, and in this ordered basis it acts as $\theta(B)K$, without an additional sign or scale factor.
 
 The orthogonal complement $W^\perp$ is also invariant under the whole family. If $x\in W^\perp$ and $w\in W$, then $Bw\in W$ and
 $$
 w^T(Bx)=-(Bw)^Tx=0.
 $$
-Repeat the argument on the restrictions to $W^\perp$: if every basis matrix vanishes there, that remaining subspace is a common kernel; otherwise choose a nonzero basis matrix and construct another invariant plane. Each step reduces the dimension by two. Finally, pair directions in the common kernel into zero-rotation planes, leaving at most one unpaired direction.
+Repeat the argument on the restrictions to $W^\perp$: these restrictions remain skew-symmetric and pairwise commuting. If every basis matrix vanishes there, that remaining subspace is a common kernel; otherwise choose a nonzero basis matrix and construct another invariant plane. Each step reduces the dimension by two. Finally, pair directions in the common kernel into zero-rotation planes, leaving at most one unpaired direction.
 
 The orthonormal bases of all these subspaces form the columns of an orthogonal matrix $P$. With $m=\lfloor n/2\rfloor$, the induction therefore proves the **common-plane decomposition**:
 $$
